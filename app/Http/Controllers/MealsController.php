@@ -14,7 +14,6 @@ class MealsController extends Controller
     
     public function index()
     {
-
         $meals = Auth::user()->meals;
 
         return Inertia::render('Meals')->with([

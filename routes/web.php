@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\MealsController;
+use App\Http\Controllers\PlannerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WorkoutController;
 use App\Http\Controllers\ExerciseController;
@@ -41,9 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/planner', function () {
-        return Inertia::render('Planner');
-    })->name('planner');
+    Route::get('/planner', [PlannerController::class, 'index'])->name('planner');
 
     Route::get('/inventory',  [InventoryController::class, 'index'])
         ->name('inventory');
@@ -81,7 +80,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('food', [FoodController::class, 'index'])
         ->name('food-index');
-        
+
     Route::post('food', [FoodController::class, 'save'])
         ->name('add-food-item');
         
