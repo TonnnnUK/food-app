@@ -9,6 +9,7 @@ use App\Http\Controllers\PlannerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WorkoutController;
 use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryController;
 
 /*
@@ -31,18 +32,26 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard', [
-        'name' => Auth::user()->name
-    ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])
+        ->name('dashboard');
+
+    Route::post('/entry/{entry}/complete', [DashboardController::class, 'complete'])
+        ->name('complete-entry');
+
+    Route::post('/entry/leftovers', [DashboardController::class, 'leftovers'])
+        ->name('add-leftovers');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/planner', [PlannerController::class, 'index'])->name('planner');
+    Route::post('/entry/add', [PlannerController::class, 'addEntry'])->name('add-entry');
+    Route::patch('/entry/update', [PlannerController::class, 'updateEntry'])->name('update-entry');
+    Route::delete('/entry/{entry}', [PlannerController::class, 'destroy'])->name('delete-entry');
 
     Route::get('/inventory',  [InventoryController::class, 'index'])
         ->name('inventory');
@@ -53,7 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/inventory/add-items',  [InventoryController::class, 'addFoodItems'])
         ->name('add-food-items');
 
-    Route::post('/inventory/{location}/{item}/remove',  [InventoryController::class, 'removeFoodItem'])
+    Route::post('/inventory/{id}/remove',  [InventoryController::class, 'removeFoodItem'])
         ->name('remove-inventory-item');
         
 
@@ -73,10 +82,16 @@ Route::middleware('auth')->group(function () {
         
     Route::post('/meal/{meal}', [MealsController::class, 'addIngredient'])
         ->name('add-ingredient');
-    
+        
+    Route::post('/meal/{meal}/save-title', [MealsController::class, 'saveTitle'])
+        ->name('save-meal-title');
+        
     Route::post('/meal/{meal}/remove/{fooditem}', [MealsController::class, 'removeIngredient'])
         ->name('remove-ingredient');
-
+        
+        
+    Route::post('/meal/{meal}/duplicate', [MealsController::class, 'duplicate'])
+        ->name('duplicate-meal');
 
     Route::get('food', [FoodController::class, 'index'])
         ->name('food-index');

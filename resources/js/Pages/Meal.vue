@@ -1,12 +1,12 @@
 
 <template>
-    <Head title="Meal" />
+    <Head :title="`Meal: ${meal.name}`" />
 
     <AuthenticatedLayout>
         <template #header>
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                    Meal
+                    Meal: {{ meal.name }}
                 </h2>
                 <Link :href="route('meals')" class="text-xs text-blue-600 hover:underline">&laquo; Back to meals</Link>
             </div>
@@ -17,7 +17,28 @@
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <div class="flex items-center justify-between">
-                            <h2 class="text-xl font-bold">{{meal.name}}</h2>
+                            <div class="flex items-center gap-2" v-if="!data.editingName">
+                                <h2 class="text-xl font-bold">{{meal.name}}</h2>
+                                <button class="px-2 py-1 text-xs transition duration-200 bg-gray-200 rounded-lg hover:bg-gray-300"
+                                    @click="data.editingName = true;"
+                                >
+                                    Edit
+                                </button>
+
+                                <div class="flex gap-2 ml-4">
+                                    <span v-on:click="data.makeDuplicate = !data.makeDuplicate" class="cursor-pointer"><i class="fas fa-copy"></i></span>
+                                    <span v-if="data.makeDuplicate" class="text-sm">Make a duplicate? <span v-on:click="duplicateRecipe()" class="text-red-600 cursor-pointer hover:underline">Yes</span></span>
+                                </div>
+                            </div>
+
+                            <div v-if="data.editingName" class="flex gap-2">
+                                <TextInput class="px-3 text-xl border" v-model="meal.name" />
+                                <button class="px-2 py-1 text-xs text-white transition duration-200 bg-blue-500 rounded-lg hover:bg-blue-600" 
+                                    v-on:click="data.editingName = false; saveTitle()"
+                                >
+                                    Save
+                                </button>
+                            </div>
 
                             <div class="flex items-center gap-2 text-sm">
                                 <label for="">Servings</label>
@@ -60,7 +81,6 @@
                         </div>
 
                         <div>
-
                             <div class="flex flex-col w-full xl:w-9/12">
                                 <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
                                     <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -124,6 +144,8 @@
         isSearching: false,
         searchItems: [],
         errors: [],
+        editingName: false,
+        makeDuplicate: false
     });
 
 
@@ -211,6 +233,20 @@
         router.post(`/meal/${data.mealID}/remove/${ingredient.id}`, {
             preserveState: true
         });
+    }
+
+    let saveTitle = () => {
+        router.post(`/meal/${data.mealID}/save-title`, { newTitle: router.page.props.meal.name } , {
+            preserveState: true
+        });
+    }
+
+    let duplicateRecipe = () => {
+        router.post(`/meal/${data.mealID}/duplicate`, {
+            preserveState: true
+        });
+
+        data.makeDuplicate = false;
     }
         
     

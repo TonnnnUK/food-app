@@ -26,10 +26,12 @@
                     <div class="p-6 bg-white border-b border-gray-200">
                         <h2 class="text-xl font-bold">Your meals</h2>
 
-                        <div v-for="meal of meals" :key="meal.id">
-                            <Link class="text-blue-700 hover:underline" :href="route('meal-info', meal.id)">
-                                {{meal.name}}
-                            </Link>
+                        <div class="flex flex-wrap gap-2 my-2">
+                            <div v-for="meal of meals" :key="meal.id">
+                                <Link class="px-4 py-1 text-xs text-blue-700 transition duration-200 rounded-lg bg-blue-50 hover:bg-blue-100" :href="route('meal-info', meal.id)">
+                                    {{meal.name}}
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>

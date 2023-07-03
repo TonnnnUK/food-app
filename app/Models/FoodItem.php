@@ -16,6 +16,6 @@ class FoodItem extends Model
 
     public function location(){
         return $this->belongsToMany(User::class, 'user_food_items', 'location_id')
-                    ->withPivot(['user_id', 'qty', 'unit_id', 'date_in', 'date_out', 'days_expire', 'freezeable']);
+                    ->withPivot(['id', 'user_id', 'qty', 'unit_id', 'date_in', 'date_out', 'days_expire', 'freezeable']);
     }
 }

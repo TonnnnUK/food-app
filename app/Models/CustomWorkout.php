@@ -20,6 +20,7 @@ class CustomWorkout extends Model
         'routine' => 'array',
     ];
 
+    protected $with = ['exerciseSets'];
 
     public function user()
     {
@@ -31,8 +32,8 @@ class CustomWorkout extends Model
         return $this->belongsToMany(Tag::class)->withTimestamps();
     }
 
-    public function exercises() {
-        return $this->belongsToMany(Exercise::class, 'custom_workout_exercises')->withTimestamps();
+    public function exerciseSets(){
+        return $this->hasMany(CustomWorkoutExerciseSet::class);
     }
 
     public static function createSlug($user, $title)

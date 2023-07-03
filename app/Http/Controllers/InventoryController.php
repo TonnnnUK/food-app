@@ -6,26 +6,62 @@ use Carbon\Carbon;
 use App\Models\Unit;
 use Inertia\Inertia;
 use App\Models\FoodItem;
+use App\Models\FoodType;
 use App\Models\Location;
+use App\Models\UserMeal;
+use App\Models\UserRecipe;
+use App\Models\UserFoodItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class InventoryController extends Controller
 {
     public function index()
     {
-        $locations = Location::with('items')->where('user_id', Auth::user()->id)->get();
+        $locations = Location::with(['items' => function($query){
+            return $query->orderBy('name');
+        },'meals' => function($query){
+            return $query->orderBy('name');
+        }, 'recipes' => function($query){
+            return $query->orderBy('name');
+        }])->where('user_id', Auth::user()->id)->get();
+
+        foreach( $locations as $location ){
+            foreach( $location->items as $item ){
+                $user_food_item = UserFoodItem::find($item->pivot->id);
+                $item->pivot->days_old = $user_food_item->days_old;
+            }
+            foreach( $location->meals as $item ){
+                $user_meal = UserMeal::find($item->pivot->id);
+                $item->pivot->days_old = $user_meal->days_old;
+            }
+            foreach( $location->recipes as $item ){
+                $user_recipe = UserRecipe::find($item->pivot->id);
+                $item->pivot->days_old = $user_recipe->days_old;
+            }
+
+        }
+
         $units = Unit::all();
+        $food_types = FoodType::all();
 
 
         if( request()->search){
             $search = request()->search;
             $foodItems = FoodItem::where('name', 'LIKE', "%$search%")->get();
         }
-        
+
+        if( request()->type){
+            $type_id = request()->type;
+            $foodItems = FoodItem::where('food_type_id', $type_id)->get();
+        }
+
+
         return Inertia::render('Inventory')->with([
             'locations' => $locations,
             'units' => $units,
+            'food_types' => $food_types,
             'foodItems' => isset($foodItems) ? $foodItems : null,
         ]);
         
@@ -69,9 +105,10 @@ class InventoryController extends Controller
         return redirect('/inventory');
     }
     
-    public function removeFoodItem(Location $location, FoodItem $item)
+    public function removeFoodItem($id)
     {   
-        $location->items()->detach([$item->id]);
+        $remove_item = DB::table('user_food_items')->where('id', $id)->delete();
+
         return redirect('/inventory');
     }
 

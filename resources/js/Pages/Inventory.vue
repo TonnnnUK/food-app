@@ -1,5 +1,5 @@
 <template>
-    <Head title="Dashboard" />
+    <Head title="Your Inventory" />
 
     <AuthenticatedLayout>
         <template #header>
@@ -33,25 +33,40 @@
 
             <div class="flex flex-col gap-1 my-5" v-if="data.itemForm.open">
                 <label for="">Adding food to</label>
-                <div class="flex items-center w-full gap-2 sm:w-1/2 lg:w-1/3">
+                <div class="flex items-center w-full">
                 
-                    <select class="text-sm border border-gray-300 rounded-lg" v-model="data.addTo">
-                        <option value="0" selected>-- Select location --</option>
-                        <option v-for="location of locations" :key="location.id" :value="location.id">
-                            {{location.name}}
-                        </option>
-                    </select>
+                    <div class="w-1/5">
+                        <select class="text-sm border border-gray-300 rounded-lg" v-model="data.addTo">
+                            <option value="0" selected>-- Select location --</option>
+                            <option v-for="location of locations" :key="location.id" :value="location.id">
+                                {{location.name}}
+                            </option>
+                        </select>
+                    </div>
 
-                    <input class="w-full text-sm border-gray-300 rounded-lg" 
-                            placeholder="Food Search" 
-                            type="text" 
-                            v-model="search">
+                    <div class="w-2/5">
+                        <input class="w-full text-sm border-gray-300 rounded-lg w-" 
+                                placeholder="Food Search" 
+                                type="text" 
+                                v-model="search">
+                    </div>
+
+                    <div class="flex flex-wrap w-2/5 gap-2 px-4 text-xs grow-1">
+                        <span class="px-2 py-1 transition duration-200 bg-blue-300 border rounded-lg hover:cursor-pointer hover:bg-blue-400"
+                            v-for="food_type of food_types" :key="food_type.id"
+                            v-on:click="selectFoodType(food_type.id)"
+                        >
+                            {{food_type.name}}
+                        </span>
+                    </div>
 
                 </div>
                 <div class="flex flex-wrap">
 
                     <div v-for="item of foodItems" :key="item.id" class="flex items-center w-full gap-2 md:w-1/2 lg:w-1/3">
-                        <input type="checkbox" v-model="selectedItems" :id="item.id" :value="item.id"> {{ item.name }}
+                        <label class="p-1 mb-1 border border-gray-100 cursor-pointer hover:border-gray-400">
+                            <input type="checkbox" v-model="selectedItems" :id="item.id" :value="item.id"> {{ item.name }}
+                        </label>
                     </div>
                 </div>
 
@@ -82,23 +97,68 @@
                                 <table class="min-w-full text-sm font-light text-left">
                                 <thead class="font-medium border-b dark:border-neutral-500">
                                     <tr>
-                                        <th scope="col" class="px-6 py-4">Item</th>
-                                        <th scope="col" class="px-6 py-4">Qty</th>
-                                        <th scope="col" class="px-6 py-4">Date In</th>
+                                        <th scope="col" class="px-2 py-4">Item</th>
+                                        <th scope="col" class="px-2 py-4">Qty</th>
+                                        <th scope="col" class="px-2 py-4">Move to</th>
+                                        <th scope="col" class="px-2 py-4">Date In</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="border-b dark:border-neutral-500" v-for="item of location.items" :key="item.id">
-                                        <td class="px-6 py-4 font-medium whitespace-nowrap">
+                                    <tr class="border-b dark:border-neutral-500" v-for="item of location.meals" :key="item.id">
+                                        <td class="px-2 py-4 font-medium whitespace-nowrap">
                                             <span class="capitalize">{{ item.name }}</span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ item.pivot.date_in }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
+                                        </td>
+                                        <td class="px-2">Move</td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            {{ formatDate(item.pivot.date_in) }} <br>
+                                            {{ item.pivot.days_old }}
+                                        </td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
                                             <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
                                         </td>
-                                        <td class="px-6 py-4 text-right whitespace-nowrap">
-                                            <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem(location, item)">X</span>
+                                        <td class="px-2 py-4 text-right whitespace-nowrap">
+                                            <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem(item.pivot.id)">X</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b dark:border-neutral-500" v-for="item of location.recipes" :key="item.id">
+                                        <td class="px-2 py-4 font-medium whitespace-nowrap">
+                                            <span class="capitalize">{{ item.name }}</span>
+                                        </td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
+                                        </td>
+                                        <td class="px-2">Move</td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            {{ formatDate(item.pivot.date_in) }} <br>
+                                            {{ item.pivot.days_old }}
+                                        </td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
+                                        </td>
+                                        <td class="px-2 py-4 text-right whitespace-nowrap">
+                                            <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem(item.pivot.id)">X</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b dark:border-neutral-500" v-for="item of location.items" :key="item.id">
+                                        <td class="px-2 py-4 font-medium whitespace-nowrap">
+                                            <span class="capitalize">{{ item.name }}</span>
+                                        </td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
+                                        </td>
+                                        <td class="px-2">Move</td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            {{ formatDate(item.pivot.date_in) }} <br>
+                                            {{ item.pivot.days_old }}
+                                        </td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
+                                        </td>
+                                        <td class="px-2 py-4 text-right whitespace-nowrap">
+                                            <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem(item.pivot.id)">X</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -128,10 +188,12 @@
     import { useForm, router } from '@inertiajs/vue3';
     import { reactive, ref, watch } from "vue";
     import debounce from "lodash/debounce";
+    import { CalendarService } from '@/Services/CalendarService';
 
     defineProps({
         'locations': Array,
         'units': Array,
+        'food_types': Object,
         'foodItems': Object,
     });
 
@@ -154,6 +216,12 @@
         name: ''
     });
 
+    const Calendar = new CalendarService;
+    let formatDate = (dateString) => {
+        let dt = new Date(dateString);
+        return dt.getDate() + ' ' + Calendar.months[dt.getMonth()] + ' ' + dt.getFullYear();
+    };
+
 
     let addLocation = () => {
         newLocation.post('/inventory')
@@ -171,11 +239,19 @@
 
     watch( search, debounce( function(value){
 
-        router.get('/inventory', { search: value}, {
+        router.get('/inventory', { search: value }, {
             preserveState: true
         });
 
     }, 300) );
+
+
+    let selectFoodType = (type_id) => {
+        router.get('/inventory', { type: type_id }, {
+            preserveState: true
+        });
+    };
+
     //////////////////////////
     // FOOD SEARCH END //
     //////////////////////////
@@ -202,8 +278,8 @@
 
     // Remove FOOD ITEMS //
 
-    let removeItem = (location, item) => {
-        router.post(`/inventory/${location.id}/${item.id}/remove`, {
+    let removeItem = (item) => {
+        router.post(`/inventory/${item}/remove`, {
             preserveState: true
         });
 

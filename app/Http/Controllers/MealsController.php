@@ -6,7 +6,9 @@ use App\Models\Meal;
 use App\Models\Unit;
 use Inertia\Inertia;
 use App\Models\FoodItem;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class MealsController extends Controller
@@ -15,9 +17,10 @@ class MealsController extends Controller
     public function index()
     {
         $meals = Auth::user()->meals;
+        $sorted = $meals->sortBy('name')->values();
 
         return Inertia::render('Meals')->with([
-            'meals' => $meals
+            'meals' => $sorted
         ]);
         
     }
@@ -65,6 +68,15 @@ class MealsController extends Controller
         
     }
 
+    public function saveTitle(Meal $meal){
+        
+        $meal->name = request('newTitle');
+        $meal->save();
+
+        return redirect("/meal/$meal->id");
+
+    }
+
     public function removeIngredient(Meal $meal, FoodItem $fooditem){
 
         $meal->ingredients()->detach([$fooditem->id]);
@@ -85,6 +97,26 @@ class MealsController extends Controller
         //     'foodItems' => isset($foodItems) ? $foodItems : null,
         // ]);
         
+    }
+
+    public function duplicate(Meal $meal)
+    {
+        $ingredients = $meal->ingredients;
+        $mealArray = $meal->toArray();
+        Arr::forget($mealArray, ['id', 'ingredients', 'created_at', 'updated_at']);
+        
+        $new = Meal::create($mealArray);
+        
+        $ingredients->map(function( $ing ) use ( $new ){
+            
+            $ing->pivot->meal_id = $new->id;
+            $insert = $ing->pivot->toArray();
+            Arr::forget($insert, ['created_at', 'updated_at']);
+            $id = DB::table('meal_food_items')->insertGetId($insert);
+        });
+
+        return redirect("/meal/$new->id");
+
     }
 
 }

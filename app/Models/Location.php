@@ -29,6 +29,18 @@ class Location extends Model
     public function items()
     {
         return $this->belongsToMany(FoodItem::class, 'user_food_items')
-                    ->withPivot(['user_id', 'qty', 'unit_id', 'date_in', 'date_out', 'days_expire', 'freezeable']);
+                    ->withPivot(['id', 'user_id', 'qty', 'unit_id', 'date_in', 'date_out', 'days_expire', 'freezeable']);
+    }
+
+    public function meals()
+    {
+        return $this->belongsToMany(Meal::class, 'user_meals')
+                    ->withPivot(['id', 'user_id', 'qty', 'unit_id', 'date_in', 'date_out', 'days_expire', 'freezeable']);
+    }
+
+    public function recipes()
+    {
+        return $this->belongsToMany(Recipe::class, 'user_recipes')
+                    ->withPivot(['id', 'user_id', 'qty', 'unit_id', 'date_in', 'date_out', 'days_expire', 'freezeable']);
     }
 }

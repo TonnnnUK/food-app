@@ -54,13 +54,13 @@ const showingNavigationDropdown = ref(false);
                         Meals
                     </NavLink>
 
-                    <NavLink :href="route('exercises')" :active="route().current('exercises')">
+                    <!-- <NavLink :href="route('exercises')" :active="route().current('exercises')">
                         <b>Exercises</b>
                     </NavLink>
 
                     <NavLink :href="route('workouts')" :active="route().current('workouts')">
                         Workouts
-                    </NavLink>
+                    </NavLink> -->
                 </div>
             </div>
 
@@ -74,7 +74,7 @@ const showingNavigationDropdown = ref(false);
                                     type="button"
                                     class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
                                 >
-                                    {{ $page.props.auth.user.name }}
+                                    {{ $page.props.auth.user.username }}
 
                                     <svg
                                         class="ml-2 -mr-0.5 h-4 w-4"
