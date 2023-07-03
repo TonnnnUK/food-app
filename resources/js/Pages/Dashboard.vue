@@ -24,7 +24,7 @@
                                 <td class="px-2 py-4 font-bold w-60">
                                     <span class="capitalize">{{ entry.meal ? entry.meal.name : entry.recipe.name }}</span>
                                 </td>
-                                <td class="px-2 py-4">
+                                <td class="flex gap-1 px-2 py-4">
                                     <span class="px-2 py-1 mx-1 transition duration-200 bg-green-100 border border-green-200 rounded-full cursor-pointer hover:bg-green-200"
                                         v-on:click="data.handleComplete = entry.id; data.handleLeftovers = 0;"
                                     >

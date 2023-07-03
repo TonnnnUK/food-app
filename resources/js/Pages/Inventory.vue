@@ -31,11 +31,12 @@
                 </div>
             </form>
 
-            <div class="flex flex-col gap-1 my-5" v-if="data.itemForm.open">
-                <label for="">Adding food to</label>
-                <div class="flex items-center w-full">
+            <label class="block mt-4" for="">Adding food to</label>
+            <div class="my-5" v-if="data.itemForm.open">
+
+                <div class="flex items-center w-full gap-2 mb-4">
                 
-                    <div class="w-1/5">
+                    <div class="w-auto">
                         <select class="text-sm border border-gray-300 rounded-lg" v-model="data.addTo">
                             <option value="0" selected>-- Select location --</option>
                             <option v-for="location of locations" :key="location.id" :value="location.id">
@@ -44,22 +45,22 @@
                         </select>
                     </div>
 
-                    <div class="w-2/5">
+                    <div class="w-auto">
                         <input class="w-full text-sm border-gray-300 rounded-lg w-" 
                                 placeholder="Food Search" 
                                 type="text" 
                                 v-model="search">
                     </div>
 
-                    <div class="flex flex-wrap w-2/5 gap-2 px-4 text-xs grow-1">
-                        <span class="px-2 py-1 transition duration-200 bg-blue-300 border rounded-lg hover:cursor-pointer hover:bg-blue-400"
-                            v-for="food_type of food_types" :key="food_type.id"
-                            v-on:click="selectFoodType(food_type.id)"
-                        >
-                            {{food_type.name}}
-                        </span>
-                    </div>
 
+                </div>
+                <div class="flex flex-wrap w-full gap-2 px-4 mb-4 text-xs grow-1">
+                    <span class="px-2 py-1 transition duration-200 bg-blue-300 border rounded-lg hover:cursor-pointer hover:bg-blue-400"
+                        v-for="food_type of food_types" :key="food_type.id"
+                        v-on:click="selectFoodType(food_type.id)"
+                    >
+                        {{food_type.name}}
+                    </span>
                 </div>
                 <div class="flex flex-wrap">
 
@@ -93,77 +94,71 @@
                     <div class="flex flex-col w-full xl:w-9/12">
                         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                            <div class="overflow-hidden">
-                                <table class="min-w-full text-sm font-light text-left">
-                                <thead class="font-medium border-b dark:border-neutral-500">
-                                    <tr>
-                                        <th scope="col" class="px-2 py-4">Item</th>
-                                        <th scope="col" class="px-2 py-4">Qty</th>
-                                        <th scope="col" class="px-2 py-4">Move to</th>
-                                        <th scope="col" class="px-2 py-4">Date In</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-b dark:border-neutral-500" v-for="item of location.meals" :key="item.id">
-                                        <td class="px-2 py-4 font-medium whitespace-nowrap">
+                            
+                                <div class="min-w-full text-sm font-light text-left">
+                                    <div class="flex justify-between font-medium border-b dark:border-neutral-500">
+                                        <div class="w-1/4 px-2 py-4">Item</div>
+                                        <div class="w-1/4 px-2 py-4">Qty</div>
+                                        <div class="w-1/4 px-2 py-4">Move to</div>
+                                        <div class="w-1/4 px-2 py-4">Actions</div>
+                                    </div>
+                                    
+                                    
+                                    <div class="flex flex-wrap items-center py-4 border-b w-100 dark:border-neutral-500" 
+                                        v-for="item of location.recipes" :key="item.id">
+                                        <div class="w-1/4 px-2 font-medium">
                                             <span class="capitalize">{{ item.name }}</span>
-                                        </td>
-                                        <td class="px-2 py-4 whitespace-nowrap">
+                                        </div>
+                                        <div class="w-1/4 px-2 ">
                                             {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
-                                        </td>
-                                        <td class="px-2">Move</td>
-                                        <td class="px-2 py-4 whitespace-nowrap">
-                                            {{ formatDate(item.pivot.date_in) }} <br>
-                                            {{ item.pivot.days_old }}
-                                        </td>
-                                        <td class="px-2 py-4 whitespace-nowrap">
+                                        </div>
+                                        <div class="w-1/4 px-2">Move</div>
+                                        <div class="flex gap-4 px-2 ">
                                             <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
-                                        </td>
-                                        <td class="px-2 py-4 text-right whitespace-nowrap">
                                             <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem(item.pivot.id)">X</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="border-b dark:border-neutral-500" v-for="item of location.recipes" :key="item.id">
-                                        <td class="px-2 py-4 font-medium whitespace-nowrap">
+                                        </div>
+                                        <div class="w-full px-2 mt-2">
+                                            {{ formatDate(item.pivot.date_in) }}
+                                            {{ item.pivot.days_old }}
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-wrap items-center py-4 border-b w-100 dark:border-neutral-500" 
+                                        v-for="item of location.meals" :key="item.id">
+                                        <div class="w-1/4 px-2 font-medium">
                                             <span class="capitalize">{{ item.name }}</span>
-                                        </td>
-                                        <td class="px-2 py-4 whitespace-nowrap">
+                                        </div>
+                                        <div class="w-1/4 px-2 ">
                                             {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
-                                        </td>
-                                        <td class="px-2">Move</td>
-                                        <td class="px-2 py-4 whitespace-nowrap">
-                                            {{ formatDate(item.pivot.date_in) }} <br>
-                                            {{ item.pivot.days_old }}
-                                        </td>
-                                        <td class="px-2 py-4 whitespace-nowrap">
+                                        </div>
+                                        <div class="w-1/4 px-2">Move</div>
+                                        <div class="flex gap-4 px-2 ">
                                             <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
-                                        </td>
-                                        <td class="px-2 py-4 text-right whitespace-nowrap">
                                             <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem(item.pivot.id)">X</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="border-b dark:border-neutral-500" v-for="item of location.items" :key="item.id">
-                                        <td class="px-2 py-4 font-medium whitespace-nowrap">
+                                        </div>
+                                        <div class="w-full px-2 mt-2">
+                                            {{ formatDate(item.pivot.date_in) }}
+                                            {{ item.pivot.days_old }}
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-wrap items-center justify-between py-4 border-b w-100 dark:border-neutral-500" 
+                                        v-for="item of location.items" :key="item.id">
+                                        <div class="w-1/4 px-2 font-medium grow-2 ">
                                             <span class="capitalize">{{ item.name }}</span>
-                                        </td>
-                                        <td class="px-2 py-4 whitespace-nowrap">
-                                            {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
-                                        </td>
-                                        <td class="px-2">Move</td>
-                                        <td class="px-2 py-4 whitespace-nowrap">
-                                            {{ formatDate(item.pivot.date_in) }} <br>
-                                            {{ item.pivot.days_old }}
-                                        </td>
-                                        <td class="px-2 py-4 whitespace-nowrap">
+                                        </div>
+                                        <div class="w-1/4 px-2 grow-1">{{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}</div>
+                                        <div class="w-1/4 px-2 grow-1">Move</div>
+                                        <div class="flex w-1/4 gap-4 px-2 grow-1">
                                             <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
-                                        </td>
-                                        <td class="px-2 py-4 text-right whitespace-nowrap">
                                             <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem(item.pivot.id)">X</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                </table>
-                            </div>
+                                        </div>
+                                        <div class="w-full px-2 mt-2 text-xs grow-1">
+                                            Added {{ formatDate(item.pivot.date_in) }} / {{ item.pivot.days_old }}
+                                        </div>
+                                    </div>
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
