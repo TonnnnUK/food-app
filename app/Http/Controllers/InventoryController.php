@@ -116,9 +116,22 @@ class InventoryController extends Controller
         return redirect('/inventory');
     }
     
-    public function removeFoodItem($id)
+    public function removeFoodItem()
     {   
-        $remove_item = DB::table('user_food_items')->where('id', $id)->delete();
+        $type = request('type');
+        $id = request('id');
+        
+        if ( $type == 'item' ){
+            $remove_item = DB::table('user_food_items')->where('id', $id)->delete();
+        }
+
+        if ( $type == 'meal' ){
+            $remove_item = DB::table('user_meals')->where('id', $id)->delete();
+        }
+
+        if ( $type == 'recipe' ){
+            $remove_item = DB::table('user_recipes')->where('id', $id)->delete();
+        }
 
         return redirect('/inventory');
     }

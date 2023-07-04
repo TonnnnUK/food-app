@@ -118,7 +118,7 @@
                                         <div class="w-1/4 px-2">Move</div>
                                         <div class="flex gap-4 px-2 ">
                                             <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
-                                            <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem(item.pivot.id)">X</span>
+                                            <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem('recipe', item.pivot.id)">X</span>
                                         </div>
                                         <div class="w-full px-2 mt-2">
                                             {{ formatDate(item.pivot.date_in) }}
@@ -137,7 +137,7 @@
                                         <div class="w-1/4 px-2">Move</div>
                                         <div class="flex gap-4 px-2 ">
                                             <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
-                                            <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem(item.pivot.id)">X</span>
+                                            <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem('meal', item.pivot.id)">X</span>
                                         </div>
                                         <div class="w-full px-2 mt-2">
                                             {{ formatDate(item.pivot.date_in) }}
@@ -154,7 +154,7 @@
                                         <div class="w-1/4 px-2 grow-1">Move</div>
                                         <div class="flex w-1/4 gap-4 px-2 grow-1">
                                             <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
-                                            <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem(item.pivot.id)">X</span>
+                                            <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem('item', item.pivot.id)">X</span>
                                         </div>
                                         <div class="w-full px-2 mt-2 text-xs grow-1">
                                             Added {{ formatDate(item.pivot.date_in) }} / {{ item.pivot.days_old }}
@@ -277,11 +277,13 @@
 
     // Remove FOOD ITEMS //
 
-    let removeItem = (item) => {
-        router.post(`/inventory/${item}/remove`, {
+    let removeItem = (type, id) => {
+        router.post(`/inventory/remove`, {
+            'type': type,
+            'id': id
+        },{ 
             preserveState: true
         });
-
 
     }
     //////////////////////////

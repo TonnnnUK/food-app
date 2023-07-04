@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/inventory',  [InventoryController::class, 'index'])->name('inventory');
     Route::post('/inventory',  [InventoryController::class, 'addLocation'])->name('add-inventory-locations');
     Route::post('/inventory/add-items',  [InventoryController::class, 'addFoodItems'])->name('add-food-items');
-    Route::post('/inventory/{id}/remove',  [InventoryController::class, 'removeFoodItem'])->name('remove-inventory-item');
+    Route::post('/inventory/remove',  [InventoryController::class, 'removeFoodItem'])->name('remove-inventory-item');
     Route::get('/inventory/{id}/meals',  [MealsController::class, 'mealsByItem'])->name('meals-by-item'); // TODO: 
 
     Route::get('/meals', [MealsController::class, 'index'])->name('meals');
