@@ -8,7 +8,7 @@
             </h2>
         </template>
 
-        <section class="p-2 sm:p-8 lg:p-12">
+        <section class="p-2 my-4 sm:p-8 lg:p-12">
             <div class="flex justify-between">
                 <button class="px-4 py-1 text-sm bg-blue-300 rounded-lg hover:bg-blue-400"
                         @click="data.itemForm.open = !data.itemForm.open; data.locationForm.open = false"
@@ -31,13 +31,13 @@
                 </div>
             </form>
 
-            <label class="block mt-4" for="">Adding food to</label>
             <div class="my-5" v-if="data.itemForm.open">
+                <label class="block w-full mt-4" for="">Adding food to</label>
 
                 <div class="flex items-center w-full gap-2 mb-4">
                 
-                    <div class="w-auto">
-                        <select class="text-sm border border-gray-300 rounded-lg" v-model="data.addTo">
+                    <div class="w-full">
+                        <select class="w-full text-sm border border-gray-300 rounded-lg" v-model="data.addTo">
                             <option value="0" selected>-- Select location --</option>
                             <option v-for="location of locations" :key="location.id" :value="location.id">
                                 {{location.name}}
@@ -45,12 +45,12 @@
                         </select>
                     </div>
 
-                    <div class="w-auto">
-                        <input class="w-full text-sm border-gray-300 rounded-lg w-" 
-                                placeholder="Food Search" 
+                    <!-- <div class="w-auto">
+                        <input class="w-full text-sm bg-gray-200 border-gray-300 rounded-lg w-" 
+                                placeholder="Food item" 
                                 type="text" 
-                                v-model="search">
-                    </div>
+                                v-model="search" disabled>
+                    </div> -->
 
 
                 </div>
@@ -65,8 +65,8 @@
                         shopping list
                     </span>
                 </div>
-                <div class="flex flex-wrap">
-
+                <div class="relative flex flex-wrap">
+                    <span v-if="foodItems && Object.keys(foodItems).length > 0" class="absolute right-4" v-on:click="resetItems()">x</span>
                     <div v-for="item of foodItems" :key="item.id" class="flex items-center w-full gap-2 md:w-1/2 lg:w-1/3">
                         <label class="p-1 mb-1 border border-gray-100 cursor-pointer hover:border-gray-400">
                             <input type="checkbox" v-model="selectedItems" :id="item.id" :value="item.id"> {{ item.name }}
@@ -99,24 +99,17 @@
                             <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                             
                                 <div class="min-w-full text-sm font-light text-left">
-                                    <div class="flex justify-between font-medium border-b dark:border-neutral-500">
-                                        <div class="w-1/4 px-2 py-4">Item</div>
-                                        <div class="w-1/4 px-2 py-4">Qty</div>
-                                        <div class="w-1/4 px-2 py-4">Move to</div>
-                                        <div class="w-1/4 px-2 py-4">Actions</div>
-                                    </div>
-                                    
                                     
                                     <div class="flex flex-wrap items-center py-4 border-b w-100 dark:border-neutral-500" 
                                         v-for="item of location.recipes" :key="item.id">
-                                        <div class="w-1/4 px-2 font-medium">
+                                        <div class="w-3/4 px-2 font-medium md:w-1/4">
                                             <span class="capitalize">{{ item.name }}</span>
                                         </div>
-                                        <div class="w-1/4 px-2 ">
+                                        <div class="order-3 w-full px-2 md:w-1/4">
                                             {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
                                         </div>
-                                        <div class="w-1/4 px-2">Move</div>
-                                        <div class="flex gap-4 px-2 ">
+                                        <div class="order-2 w-1/2 px-2 md:w-1/4">Move</div>
+                                        <div class="flex justify-end w-1/2 gap-4 px-2 md:w-1/4">
                                             <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
                                             <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem('recipe', item.pivot.id)">X</span>
                                         </div>
@@ -128,14 +121,14 @@
 
                                     <div class="flex flex-wrap items-center py-4 border-b w-100 dark:border-neutral-500" 
                                         v-for="item of location.meals" :key="item.id">
-                                        <div class="w-1/4 px-2 font-medium">
+                                        <div class="w-full px-2 font-medium md:w-1/4">
                                             <span class="capitalize">{{ item.name }}</span>
                                         </div>
-                                        <div class="w-1/4 px-2 ">
+                                        <div class="w-full px-2 md:w-1/4 ">
                                             {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
                                         </div>
-                                        <div class="w-1/4 px-2">Move</div>
-                                        <div class="flex gap-4 px-2 ">
+                                        <div class="w-1/2 px-2 md:w-1/4">Move</div>
+                                        <div class="flex justify-end w-1/2 gap-4 px-2 md:w-1/4">
                                             <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
                                             <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem('meal', item.pivot.id)">X</span>
                                         </div>
@@ -147,12 +140,12 @@
 
                                     <div class="flex flex-wrap items-center justify-between py-4 border-b w-100 dark:border-neutral-500" 
                                         v-for="item of location.items" :key="item.id">
-                                        <div class="w-1/4 px-2 font-medium grow-2 ">
+                                        <div class="w-full px-2 font-medium md:w-1/4 grow-2 ">
                                             <span class="capitalize">{{ item.name }}</span>
                                         </div>
-                                        <div class="w-1/4 px-2 grow-1">{{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}</div>
-                                        <div class="w-1/4 px-2 grow-1">Move</div>
-                                        <div class="flex w-1/4 gap-4 px-2 grow-1">
+                                        <div class="w-full px-2 md:w-1/4 grow-1">{{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}</div>
+                                        <div class="w-1/2 px-2 md:w-1/4 grow-1">Move</div>
+                                        <div class="flex justify-end w-1/2 gap-4 px-2 md:w-1/4 grow-1">
                                             <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
                                             <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem('item', item.pivot.id)">X</span>
                                         </div>
@@ -237,7 +230,7 @@
     let selectedItems = ref([]);
 
     watch( search, debounce( function(value){
-
+        
         router.get('/inventory', { search: value }, {
             preserveState: true
         });
@@ -251,6 +244,12 @@
         });
     };
 
+
+    let resetItems = () => {
+        router.get('/inventory', '', {
+            preserveState: true
+        });
+    }
     //////////////////////////
     // FOOD SEARCH END //
     //////////////////////////
