@@ -113,46 +113,35 @@
                     <div class="p-6 bg-white border-b border-gray-200">
                         <h3 class="text-lg">Your meals</h3>
                         
-                        <div class="flex flex-col w-full xl:w-9/12">
-                            <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                                <div class="overflow-hidden">
-                                    <table class="min-w-full text-sm font-light text-left">
-                                    <thead class="font-medium border-b dark:border-neutral-500">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-4">Meal</th>
-                                            <th scope="col" class="px-6 py-4">Ingredients</th>
-                                            <th scope="col" class="px-6 py-4">Missing</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="border-b dark:border-neutral-500" v-for="meal of meals" :key="meal.id">
-                                            <td class="px-6 py-4 font-medium whitespace-nowrap">
-                                                <Link :href="route('meal-info', meal.id)" class="capitalize">{{ meal.name }}</Link>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                {{ meal.inventory_match }} out of {{ meal.ingredient_count }} items in your inventory ({{ meal.match_percent ? meal.match_percent : 0 }}%) 
-                                                <div class="inline">
-                                                    <span v-if="meal.match_percent > 90" class="ml-2 text-green-300"><i class="fas fa-check"></i></span>
-                                                </div>
-                                            </td>
-                                            <td class="flex gap-2" colspan="3" v-if="Object.keys(meal.missingItems).length > 0">
-                                                <div>
-                                                    <span class="inline-block px-2 py-1 my-1 ml-2 text-xs transition duration-100 delay-100 bg-gray-200 rounded-full cursor-pointer group hover:bg-green-100" v-for="item of meal.missingItems" :key="item.key">
-                                                        {{ item.name}}
-
-                                                        <span class="absolute inline-block ml-2 transition duration-200 delay-200 opacity-0 group-hover:relative group-hover:opacity-100 hover:underline hover:text-red-600"
-                                                            v-on:click="addToList(item)"
-                                                        >
-                                                            Add to list
-                                                        </span> 
-                                                    </span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
+                        <div class="hidden w-full border-b lg:flex dark:border-neutral-500">
+                            <div class="w-1/3 px-6 py-4">Meal</div>
+                            <div class="w-1/3 px-6 py-4">Ingredients</div>
+                            <div class="w-1/3 px-6 py-4">Missing</div>
+                        </div>
+                        <div class="flex flex-col w-full">
+                            <div class="flex flex-wrap items-center border-b dark:border-neutral-500" v-for="meal of meals" :key="meal.id">
+                                <div class="w-1/2 px-6 py-4 font-medium lg:w-4/12">
+                                    <Link :href="route('meal-info', meal.id)" class="text-blue-600 capitalize hover:text-blue-800 hover:underline">{{ meal.name }}</Link>
+                                    <div class="inline">
+                                        <span v-if="meal.match_percent > 90" class="ml-2 text-green-300"><i class="fas fa-check"></i></span>
+                                    </div>
                                 </div>
+                                <div class="w-1/2 px-6 py-4 lg:w-4/12">
+                                    {{ meal.inventory_match }} / {{ meal.ingredient_count }} items in your inventory ({{ meal.match_percent ? meal.match_percent : 0 }}%) 
+                                </div>
+                                <div class="flex w-full gap-2 px-6 lg:w-4/12" v-if="Object.keys(meal.missingItems).length > 0">
+                                    <div>
+                                        <small>Missing:</small> 
+                                        <span class="inline-block px-2 py-1 my-1 ml-2 text-xs transition duration-200 delay-100 bg-gray-200 rounded-full cursor-pointer group hover:bg-green-100" v-for="item of meal.missingItems" :key="item.key">
+                                            {{ item.name}}
+
+                                            <span class="absolute inline-block ml-2 transition duration-200 opacity-0 group-hover:relative group-hover:opacity-100 hover:underline hover:text-blue-800"
+                                                v-on:click="addToList(item)"
+                                            >
+                                                Add to list
+                                            </span> 
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -190,8 +179,9 @@
 
                         <div class="flex flex-wrap my-4 text-sm">
                             <div class="flex flex-wrap items-center w-full p-2 my-1 group sm:w-1/2" v-for="item of shopping_list" :key="item.id">
-                                <span class="w-full">{{ item.name }}
-                                <span class="w-auto p-1 opacity-0 cursor-pointer group-hover:opacity-100 text-default hover:text-red-600">x</span>
+                                <span class="w-full">
+                                    {{ item.name }}
+                                    <span class="w-auto p-1 opacity-0 cursor-pointer group-hover:opacity-100 text-default hover:text-red-600">x</span>
                                 </span>
                             </div>
                             
