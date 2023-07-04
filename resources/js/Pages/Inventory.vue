@@ -32,7 +32,7 @@
             </form>
 
             <div class="my-2 sm:my-3 lg:my-5" v-if="data.itemForm.open">
-                <div class="flex items-center gap-2">
+                <div class="flex flex-col items-center gap-2 md:flex-row">
                     <label class="block w-full mb-2 md:w-auto" for="">Adding food to</label>
 
                     <div class="flex items-center w-full gap-2 mb-4 md:w-auto">
