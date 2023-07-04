@@ -69,8 +69,8 @@ class User extends Authenticatable
         return $this->hasMany(Meal::class, 'user_meals');
     }
 
-    public function shopping_list_items(){
-        return $this->hasMany(FoodItem::class, 'shopping_list', 'user_id', 'food_item_id');
+    public function shopping_list(){
+        return $this->belongsToMany(FoodItem::class, 'shopping_list', 'user_id', 'food_item_id')->withTimestamps();
     }
 
 }

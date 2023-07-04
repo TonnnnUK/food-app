@@ -61,6 +61,9 @@
                     >
                         {{food_type.name}}
                     </span>
+                    <span class="px-2 py-1 transition duration-200 bg-blue-300 border rounded-lg hover:cursor-pointer hover:bg-blue-400" v-on:click="selectFoodType('shopping_list')">
+                        shopping list
+                    </span>
                 </div>
                 <div class="flex flex-wrap">
 
@@ -185,11 +188,12 @@
     import debounce from "lodash/debounce";
     import { CalendarService } from '@/Services/CalendarService';
 
-    defineProps({
+    let props = defineProps({
         'locations': Array,
         'units': Array,
         'food_types': Object,
         'foodItems': Object,
+        'shopping_list': Object
     });
 
     let data = reactive({

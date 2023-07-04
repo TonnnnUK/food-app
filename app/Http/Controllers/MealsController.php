@@ -119,4 +119,20 @@ class MealsController extends Controller
 
     }
 
+    public function addToList(Meal $meal){
+        $mealItems = $meal->ingredients->pluck('id');
+        $inventoryItems = Auth::user()->food_items->pluck('id')->toArray();
+        $shoppingListItems = Auth::user()->shopping_list->pluck('id')->toArray();
+        $allItems = array_merge($inventoryItems, $shoppingListItems);    
+        $items = $mealItems->filter( function ($item) use ($allItems) {
+            if( in_array($item, $allItems) ){
+                return $item;
+            }
+        });
+
+        Auth::user()->shopping_list()->attach($items);
+
+        return redirect("/planner");
+    }
+
 }

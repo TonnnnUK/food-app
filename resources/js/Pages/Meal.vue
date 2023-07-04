@@ -47,25 +47,35 @@
                         </div>
 
                         <div class="my-2 lg:my-4">
+                            <div class="flex items-center justify-between">
 
-                            <div class="flex items-center gap-2">
-                                <div>
-                                    <label class="block pl-2 text-sm">Add ingredient</label>
-                                    <TextInput type="text" placeholder="Search ingredients..." v-model="search"  />
+                                <div class="flex items-center gap-2">
+                                    <div>
+                                        <label class="block pl-2 text-sm">Add ingredient</label>
+                                        <TextInput type="text" placeholder="Search ingredients..." v-model="search"  />
+                                    </div>
+                                    <div>
+                                        <label class="block pl-2 text-sm">Unit</label>
+                                        <SelectInput v-model="newIngredient.unitID">
+                                            <option v-for="unit of units" :key="unit.id" :value="unit.id">{{unit.name}}</option>
+                                        </SelectInput>
+                                    </div>
+                                    <div>
+                                        <label class="block pl-2 text-sm">Qty</label>
+                                        <TextInput type="text" placeholder="Enter qty..." class="w-28" v-model="newIngredient.qty"  />
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <label for="block">&nbsp;</label>
+                                        <PrimaryButton class="bg-blue-500 rounded-lg hover:bg-blue-600" v-on:click="addToMeal()">Add to meal</PrimaryButton>
+                                    </div>
+
                                 </div>
-                                <div>
-                                    <label class="block pl-2 text-sm">Unit</label>
-                                    <SelectInput v-model="newIngredient.unitID">
-                                        <option v-for="unit of units" :key="unit.id" :value="unit.id">{{unit.name}}</option>
-                                    </SelectInput>
-                                </div>
-                                <div>
-                                    <label class="block pl-2 text-sm">Qty</label>
-                                    <TextInput type="text" placeholder="Enter qty..." class="w-28" v-model="newIngredient.qty"  />
-                                </div>
-                                <div class="flex flex-col">
-                                    <label for="block">&nbsp;</label>
-                                    <PrimaryButton class="bg-blue-500 rounded-lg hover:bg-blue-600" v-on:click="addToMeal()">Add to meal</PrimaryButton>
+                                <div class="text-xs">
+                                    <button class="px-3 py-2 transition duration-200 bg-yellow-200 rounded-lg hover:bg-yellow-300"
+                                        v-on:click="addToList()"
+                                    >
+                                        Add to shopping list
+                                    </button>
                                 </div>
                             </div>
 
@@ -249,6 +259,10 @@
         data.makeDuplicate = false;
     }
         
-    
+    let addToList = (item ) => {
+        router.post(`/meal/${data.mealID}/add-to-shopping-list`, {
+            preserveState: true
+        });
+    }
 
 </script>

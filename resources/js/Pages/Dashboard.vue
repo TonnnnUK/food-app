@@ -92,6 +92,17 @@
                         </table>
 
                     </div>
+
+                    <div class="p-6">
+                        <h3 class="text-lg">Shopping List</h3>
+
+                        <div class="flex flex-col">
+                            <div v-for="item of shopping_list" :key="item.id">
+                                {{ item.name }}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -113,6 +124,7 @@ import SelectInput from '@/Components/SelectInput.vue';
 const props = defineProps({
     entries: Object,
     locations: Object,
+    shopping_list: Object,
 });
 
 let data = reactive({
@@ -128,7 +140,7 @@ let data = reactive({
 
 let handleLeftovers = (entry) => {
     data.leftovers.entry = entry; 
-    router.post(`/entry/leftovers`, data.leftovers, {
+    router.post(`/dashboard/leftovers`, data.leftovers, {
         preserveState: true
     });
     
@@ -137,7 +149,7 @@ let handleLeftovers = (entry) => {
 let completeMeal = (entry) => {
     
 
-    router.post(`/entry/${entry.id}/complete`, { 
+    router.post(`/dashboard/${entry.id}/complete`, { 
             removeItems: data.itemsToRemove
         }, {
         preserveState: true

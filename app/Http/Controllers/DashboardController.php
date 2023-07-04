@@ -16,9 +16,9 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-
+        $user = Auth::user();
         $dt = Carbon::now();
-        $entries = Auth::user()->entries->filter( function( $entry ) use ($dt) {
+        $entries = $user->entries->filter( function( $entry ) use ($dt) {
                                             return $entry->date_time <= $dt && $entry->completed == 0;
                                         })
                                         ->map( function( $entry ) use ($dt){
@@ -33,13 +33,15 @@ class DashboardController extends Controller
                                         })
                                         ->sortBy('date_time')->values();
 
-        $locations = Auth::user()->locations;
+        $locations = $user->locations;
 
-        // dd(Auth::user()->shopping_list_items);
+        
+        $shopping_list = $user->shopping_list;
 
         return Inertia::render('Dashboard', [
             'entries' => $entries,
-            'locations' => $locations
+            'locations' => $locations,
+            'shopping_list' => $shopping_list,
         ]);
     }
 

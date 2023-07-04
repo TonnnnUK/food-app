@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Entry;
 use App\Models\Recipe;
 use App\Models\Workout;
+use App\Models\FoodItem;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Models\CustomWorkout;
@@ -21,15 +22,17 @@ class PlannerController extends Controller
     public function index()
     {
 
+        $user = Auth::user();
+
         $recipes = Recipe::all();
-        $meals = Auth::user()->meals;
-        $inventory = Auth::user()->food_items;
+        $meals = $user->meals;
+        $inventory = $user->food_items;
         $inventoryIds = $inventory->pluck('id')->toArray();
         
         $monthStart = Carbon::now()->startOfMonth();
         $monthEnd = Carbon::now()->endOfMonth();
 
-        $entries = Entry::where('user_id', Auth::user()->id)->get();
+        $entries = Entry::where('user_id', $user->id)->get();
 
         $meals->map( function( Meal $meal, int $key ) use ( $inventory, $inventoryIds) {
             $ingredientIds = $meal->ingredients->pluck('id');
@@ -55,8 +58,8 @@ class PlannerController extends Controller
         
         $sortedMeals = $meals->sortByDesc('match_percent')->values();
 
-        $custom_workouts = Auth::user()->workouts;
-
+        $custom_workouts = $user->workouts;
+        $shopping_list = $user->shopping_list;
         $workouts = Workout::all();
 
         return Inertia::render('Planner')->with([
@@ -65,6 +68,7 @@ class PlannerController extends Controller
             'workouts' => $workouts,
             'custom_workouts' => $custom_workouts,
             'entries' => $entries,
+            'shopping_list' => $shopping_list
         ]);
     }
 
@@ -134,4 +138,19 @@ class PlannerController extends Controller
         return redirect("/planner");
 
     }
+
+    public function addToList(FoodItem $fooditem)
+    {
+        Auth::user()->shopping_list()->attach($fooditem->id);
+
+        return redirect('/planner');
+    }
+    
+    public function removeFromList(FoodItem $fooditem)
+    {
+        Auth::user()->shopping_list()->dettach($fooditem->id);
+
+        return redirect('/planner');
+    }
+    
 }

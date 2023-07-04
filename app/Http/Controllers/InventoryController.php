@@ -19,13 +19,16 @@ class InventoryController extends Controller
 {
     public function index()
     {
+
+        $user = Auth::user();
+
         $locations = Location::with(['items' => function($query){
             return $query->orderBy('name');
         },'meals' => function($query){
             return $query->orderBy('name');
         }, 'recipes' => function($query){
             return $query->orderBy('name');
-        }])->where('user_id', Auth::user()->id)->get();
+        }])->where('user_id', $user->id)->get();
 
         foreach( $locations as $location ){
             foreach( $location->items as $item ){
@@ -45,6 +48,7 @@ class InventoryController extends Controller
 
         $units = Unit::all();
         $food_types = FoodType::all();
+        $shopping_list = $user->shopping_list;
 
 
         if( request()->search){
@@ -54,7 +58,13 @@ class InventoryController extends Controller
 
         if( request()->type){
             $type_id = request()->type;
-            $foodItems = FoodItem::where('food_type_id', $type_id)->get();
+
+            if($type_id == 'shopping_list'){
+                $foodItems = $user->shopping_list;
+            } else {
+                $foodItems = FoodItem::where('food_type_id', $type_id)->get();
+            }
+
         }
 
 
@@ -62,6 +72,7 @@ class InventoryController extends Controller
             'locations' => $locations,
             'units' => $units,
             'food_types' => $food_types,
+            'shopping_list' => $shopping_list,
             'foodItems' => isset($foodItems) ? $foodItems : null,
         ]);
         
