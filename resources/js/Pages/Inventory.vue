@@ -40,7 +40,7 @@
                         <div class="flex w-full gap-4">
                             
                             <span class="px-3 py-2 text-sm transition duration-200 border rounded-full cursor-pointer select-none" 
-                                :class="location.id == data.addTo ? 'bg-green-100 border-green-300' : 'bg-gray-200 hover:bg-green-50 border-green-200'"
+                                :class="location.id == data.addTo ? 'bg-green-100 border-green-300' : 'bg-gray-200 hover:bg-green-50 border-gray-300'"
                                 v-for="location of locations" :key="location.id" 
                                 v-on:click="selectLocation(location.id)">
                                 {{location.name}}
