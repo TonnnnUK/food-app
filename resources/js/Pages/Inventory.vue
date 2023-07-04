@@ -8,7 +8,7 @@
             </h2>
         </template>
 
-        <section class="p-2 my-4 sm:p-8 lg:p-12">
+        <section class="px-2 py-4 my-4 sm:px-8 lg:px-12">
             <div class="flex justify-between">
                 <button class="px-4 py-1 text-sm bg-blue-300 rounded-lg hover:bg-blue-400"
                         @click="data.itemForm.open = !data.itemForm.open; data.locationForm.open = false"
@@ -31,31 +31,28 @@
                 </div>
             </form>
 
-            <div class="my-5" v-if="data.itemForm.open">
-                <label class="block w-full mt-4" for="">Adding food to</label>
+            <div class="my-2 sm:my-3 lg:my-5" v-if="data.itemForm.open">
+                <div class="flex items-center gap-2">
+                    <label class="block w-full mb-2 md:w-auto" for="">Adding food to</label>
 
-                <div class="flex items-center w-full gap-2 mb-4">
-                
-                    <div class="w-full">
-                        <select class="w-full text-sm border border-gray-300 rounded-lg" v-model="data.addTo">
-                            <option value="0" selected>-- Select location --</option>
-                            <option v-for="location of locations" :key="location.id" :value="location.id">
+                    <div class="flex items-center w-full gap-2 mb-4 md:w-auto">
+                    
+                        <div class="flex w-full gap-4">
+                            
+                            <span class="px-3 py-2 text-sm transition duration-200 border rounded-full cursor-pointer select-none" 
+                                :class="location.id == data.addTo ? 'bg-green-100 border-green-300' : 'bg-gray-200 hover:bg-green-50 border-green-200'"
+                                v-for="location of locations" :key="location.id" 
+                                v-on:click="selectLocation(location.id)">
                                 {{location.name}}
-                            </option>
-                        </select>
+                            </span>
+                            
+                        </div>
+
                     </div>
-
-                    <!-- <div class="w-auto">
-                        <input class="w-full text-sm bg-gray-200 border-gray-300 rounded-lg w-" 
-                                placeholder="Food item" 
-                                type="text" 
-                                v-model="search" disabled>
-                    </div> -->
-
-
                 </div>
-                <div class="flex flex-wrap w-full gap-2 px-4 mb-4 text-xs grow-1">
-                    <span class="px-2 py-1 transition duration-200 bg-blue-300 border rounded-lg hover:cursor-pointer hover:bg-blue-400"
+
+                <div class="flex flex-wrap w-full gap-2 px-4 text-lg md:text-sm grow-1">
+                    <span class="px-3 py-1 transition duration-200 bg-blue-300 border rounded-lg select-none hover:cursor-pointer hover:bg-blue-400"
                         v-for="food_type of food_types" :key="food_type.id"
                         v-on:click="selectFoodType(food_type.id)"
                     >
@@ -65,10 +62,10 @@
                         shopping list
                     </span>
                 </div>
-                <div class="relative flex flex-wrap">
+                <div class="relative flex flex-wrap mt-4 md:mt-2">
                     <span v-if="foodItems && Object.keys(foodItems).length > 0" class="absolute right-4" v-on:click="resetItems()">x</span>
-                    <div v-for="item of foodItems" :key="item.id" class="flex items-center w-full gap-2 md:w-1/2 lg:w-1/3">
-                        <label class="p-1 mb-1 border border-gray-100 cursor-pointer hover:border-gray-400">
+                    <div v-for="item of foodItems" :key="item.id" class="flex items-center w-full gap-2 sm:w-1/2 lg:w-1/3">
+                        <label class="p-1 mb-1 text-lg border border-gray-100 cursor-pointer hover:border-gray-400 md:text-sm">
                             <input type="checkbox" v-model="selectedItems" :id="item.id" :value="item.id"> {{ item.name }}
                         </label>
                     </div>
@@ -81,7 +78,7 @@
         </section>
 
         <section v-if="locations && locations.length > 0" class="p-2 sm:px-8 lg:px-12">
-            <div class="mb-5" v-for="location of locations" :key="location.id">
+            <div class="mb-2 lg:mb-4" v-for="location of locations" :key="location.id">
                 <div class="flex items-center justify-between p-4 font-bold border cursor-pointer bg-green-50" 
                     @click="data.showLocation.display == location.id ? data.showLocation.display = 0 : data.showLocation.display = location.id"
                 >
@@ -91,14 +88,14 @@
                     <span class="text-2xl" v-show="data.showLocation.display == location.id">-</span>
                 </div>
                 <div class="p-4 bg-white border" v-show="data.showLocation.display == location.id">
-                    <small class="block my-2">Let's have a look in the {{ location.name }}</small>
+                    <small class="block my-2 md:text-sm">Let's have a look in the {{ location.name }}</small>
                     
 
                     <div class="flex flex-col w-full xl:w-9/12">
                         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                             
-                                <div class="min-w-full text-sm font-light text-left">
+                                <div class="min-w-full font-light text-left md:text-sm">
                                     
                                     <div class="flex flex-wrap items-center py-4 border-b w-100 dark:border-neutral-500" 
                                         v-for="item of location.recipes" :key="item.id">
@@ -257,6 +254,10 @@
 
 
     // ADD FOOD ITEMS //
+
+    let selectLocation = (location) => {
+        data.addTo = location;
+    };
 
     let addFoodItems = () => {
         router.post('/inventory/add-items', { 
