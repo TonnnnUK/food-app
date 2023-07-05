@@ -12,25 +12,12 @@
             </div>
         </template>
 
-        <div class="py-12">
+        <div class="py-4 md:py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2" v-if="!data.editingName">
-                                <h2 class="text-xl font-bold">{{meal.name}}</h2>
-                                <button class="px-2 py-1 text-xs transition duration-200 bg-gray-200 rounded-lg hover:bg-gray-300"
-                                    @click="data.editingName = true;"
-                                >
-                                    Edit
-                                </button>
-
-                                <div class="flex gap-2 ml-4">
-                                    <span v-on:click="data.makeDuplicate = !data.makeDuplicate" class="cursor-pointer"><i class="fas fa-copy"></i></span>
-                                    <span v-if="data.makeDuplicate" class="text-sm">Make a duplicate? <span v-on:click="duplicateRecipe()" class="text-red-600 cursor-pointer hover:underline">Yes</span></span>
-                                </div>
-                            </div>
-
+                        <div class="flex flex-col w-full gap-2 sm:items-center sm:flex-row">
+                            <h2 v-if="!data.editingName" class="text-xl font-bold">{{meal.name}}</h2>
                             <div v-if="data.editingName" class="flex gap-2">
                                 <TextInput class="px-3 text-xl border" v-model="meal.name" />
                                 <button class="px-2 py-1 text-xs text-white transition duration-200 bg-blue-500 rounded-lg hover:bg-blue-600" 
@@ -39,44 +26,53 @@
                                     Save
                                 </button>
                             </div>
-
-                            <div class="flex items-center gap-2 text-sm">
+                            <div class="flex gap-2 my-4">
+                                <div class="flex">
+                                    <span v-on:click="data.makeDuplicate = !data.makeDuplicate" class="cursor-pointer"><i class="fas fa-copy"></i></span>
+                                    <span v-if="data.makeDuplicate" class="text-sm">Make a duplicate? <span v-on:click="duplicateRecipe()" class="text-red-600 cursor-pointer hover:underline">Yes</span></span>
+                                </div>
+                                <button class="px-2 py-1 text-xs transition duration-200 bg-gray-200 rounded-lg hover:bg-gray-300"
+                                    @click="data.editingName = true;"
+                                    v-if="!data.editingName"
+                                >
+                                    Edit
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex my-4">
+                            <div class="flex items-center order-2 w-3/4 gap-2 text-sm sm:w-auto">
                                 <label for="">Servings</label>
                                 <TextInput class="w-12" type="number" v-model="meal.servings" />
                             </div>
                         </div>
 
-                        <div class="my-2 lg:my-4">
-                            <div class="flex items-center justify-between">
+                        <div class="my-4">
+                            <div class="flex flex-col gap-2 md:items-center md:flex-row">
 
-                                <div class="flex items-center gap-2">
-                                    <div>
-                                        <label class="block pl-2 text-sm">Add ingredient</label>
-                                        <TextInput type="text" placeholder="Search ingredients..." v-model="search"  />
+                                <div class="inline-flex flex-col gap-2 md:flex-row">
+                                    <div class="flex flex-col gap-2 sm:items-center sm:flex-row">
+                                        <label class="block pl-2 text-sm sm:w-[20%] sm:text-right md:w-full">Add ingredient</label>
+                                        <TextInput class="sm:w-[75%]" type="text" placeholder="Search ingredients..." v-model="search"  />
                                     </div>
-                                    <div>
-                                        <label class="block pl-2 text-sm">Unit</label>
-                                        <SelectInput v-model="newIngredient.unitID">
+                                    <div class="flex flex-col gap-2 sm:items-center sm:flex-row">
+                                        <label class="block pl-2 text-sm sm:w-[20%] sm:text-right">Unit</label>
+                                        <SelectInput class="sm:w-[75%]" v-model="newIngredient.unitID">
                                             <option v-for="unit of units" :key="unit.id" :value="unit.id">{{unit.name}}</option>
                                         </SelectInput>
                                     </div>
-                                    <div>
-                                        <label class="block pl-2 text-sm">Qty</label>
-                                        <TextInput type="text" placeholder="Enter qty..." class="w-28" v-model="newIngredient.qty"  />
+
+                                    <div class="flex flex-col gap-2 sm:items-center sm:flex-row">
+                                        <label class="block pl-2 text-sm sm:w-[20%] sm:text-right">Qty</label>
+                                        <TextInput class="sm:w-[75%]" type="text" placeholder="Enter qty..." v-model="newIngredient.qty"  />
                                     </div>
+                                </div>
+                                <div class="flex items-end w-full md:w-auto">
                                     <div class="flex flex-col">
-                                        <label for="block">&nbsp;</label>
                                         <PrimaryButton class="bg-blue-500 rounded-lg hover:bg-blue-600" v-on:click="addToMeal()">Add to meal</PrimaryButton>
                                     </div>
+                                </div>
 
-                                </div>
-                                <div class="text-xs">
-                                    <button class="px-3 py-2 transition duration-200 bg-yellow-200 rounded-lg hover:bg-yellow-300"
-                                        v-on:click="addToList()"
-                                    >
-                                        Add to shopping list
-                                    </button>
-                                </div>
+                            
                             </div>
 
                             <div class="flex flex-wrap gap-2 my-2 md:my-4" v-if="data.isSearching">
@@ -100,7 +96,13 @@
                                             <tr>
                                                 <th scope="col" class="px-6 py-4">Ingredient</th>
                                                 <th scope="col" class="px-6 py-4">Qty</th>
-                                                <th scope="col"></th>
+                                                <th scope="col" class="flex justify-end">
+                                                    <button class="px-3 py-2 transition duration-200 bg-yellow-200 rounded-lg hover:bg-yellow-300"
+                                                            v-on:click="addToList()"
+                                                    >
+                                                        Add all to shopping list
+                                                    </button>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
