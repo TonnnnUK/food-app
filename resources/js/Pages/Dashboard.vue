@@ -3,7 +3,7 @@
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="flex items-end text-xl font-semibold leading-tight text-gray-800">Welcome, <span class="ml-2 text-sm">{{$page.props.auth.user.username}}</span> </h2>
+            <h2 class="flex items-end font-semibold leading-tight text-gray-800 md:text-xl">Welcome, <span class="ml-2 text-sm">{{$page.props.auth.user.username}}</span> </h2>
         </template>
 
         <div class="py-12">

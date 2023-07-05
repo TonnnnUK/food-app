@@ -3,27 +3,30 @@
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+            <h2 class="font-semibold leading-tight text-gray-800 sm:text-xl">
                 Meal &amp; Workout Planner
             </h2>
         </template>
 
-        <div class="px-4 py-4">
+        <div class="p-2 sm:p-4">
 
             <!-- TABS  -->
-            <div class="mx-auto my-4 max-w-7xl">
-                <div class="flex gap-3">
-                    <PlannerTab 
-                        v-for="tab of data.tabs" :key="tab"
-                        :class="data.selectedContent == tab ? 'bg-purple-300 font-bold' : 'bg-white hover:bg-purple-300'"
-                        v-on:click="changeTab(tab)"
-                        :item="tab"
-                    />
+            <div class="mx-auto my-2 sm:my-4 max-w-7xl">
+                <div class="flex flex-wrap gap-2 text-center">
+                    <div v-for="tab of data.tabs" :key="tab"
+                        class="w-[48%] sm:w-auto"
+                    >
+                        <PlannerTab 
+                            :class="data.selectedContent == tab ? 'bg-purple-300 font-bold' : 'bg-white hover:bg-purple-300'"
+                            v-on:click="changeTab(tab)"
+                            :item="tab"
+                        />
+                    </div>
                 </div>
             </div>
 
             <!-- CALENDAR -->
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8" v-if="data.selectedContent == 'calendar'">
+            <div class="mx-auto mt-4 max-w-7xl sm:px-6 lg:px-8 md:mt-8" v-if="data.selectedContent == 'calendar'">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <div class="flex items-center justify-between mb-4">
@@ -108,7 +111,7 @@
             </div>
 
             <!-- MEALS -->
-            <div class="mx-auto my-2 max-w-7xl sm:px-6 lg:px-8" v-if="data.selectedContent == 'meals'">
+            <div class="mx-auto mt-4 max-w-7xl sm:px-6 lg:px-8 md:mt-8" v-if="data.selectedContent == 'meals'">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <h3 class="text-lg">Your meals</h3>
@@ -150,7 +153,7 @@
             </div>
 
             <!-- WORKOUTS -->
-            <div class="mx-auto my-2 max-w-7xl sm:px-6 lg:px-8" v-if="data.selectedContent == 'workouts'">
+            <div class="mx-auto mt-4 max-w-7xl sm:px-6 lg:px-8 md:mt-8" v-if="data.selectedContent == 'workouts'">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <h3 class="mb-4 text-lg">Your Workouts</h3>
@@ -172,7 +175,7 @@
             </div>
 
             <!-- SHOPPING LIST -->
-             <div class="mx-auto my-2 max-w-7xl sm:px-6 lg:px-8" v-if="data.selectedContent == 'shopping list'">
+             <div class="mx-auto mt-4 max-w-7xl sm:px-6 lg:px-8 md:mt-8" v-if="data.selectedContent == 'shopping list'">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <h3 class="text-lg">Shopping List</h3>

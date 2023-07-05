@@ -8,7 +8,7 @@
     <AuthenticatedLayout>
         <template #header>
             <div class="flex items-center justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                <h2 class="font-semibold leading-tight text-gray-800 md:text-xl">
                     Exercises
                 </h2>
                 <Link :href="route('exercises')" class="text-xs text-blue-600 hover:underline">&laquo; Back to exercises</Link>
