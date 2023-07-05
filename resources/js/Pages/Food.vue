@@ -12,15 +12,17 @@
         <div class="p-4 sm:p-6 lg:p-8 xl:p-12">
 
 
-            <form @submit.prevent="addItem" class="flex items-center gap-2 my-5 ">
-                <label class="block w-auto text-xs" for="">New Item</label>
-                <div class="flex w-full gap-2 lg:w-1/2">
+            <form @submit.prevent="addItem" class="flex flex-wrap items-center gap-2 my-5 ">
+                <label class="block w-full text-xs md:w-auto" for="">New Item</label>
+                <div class="flex flex-col w-full gap-2 md:flex-row lg:w-1/2">
                     <input class="w-full text-sm border-gray-300 rounded-lg sm:w-full lg:w-10/12" placeholder="Enter an ingredient" type="text" v-model="newItem.name">
                     <select class="w-full text-sm border-gray-300 rounded-lg sm:w-full lg:w-10/12" v-model="newItem.food_type_id">
                         <option value="0">-- select food type --</option>
                         <option v-for="type of foodtypes" :key="type.id" :value="type.id">{{type.name}}</option>
                     </select>
-                    <button class="px-4 py-1 text-sm text-white bg-green-500 rounded-lg hover:bg-green-600">Add</button>
+                    <div class="flex items-center w-full">
+                        <button class="px-4 py-1 text-sm text-white bg-green-500 rounded-lg hover:bg-green-600">Add</button>
+                    </div>
                 </div>
             </form>
 

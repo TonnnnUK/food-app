@@ -42,10 +42,6 @@ const showingNavigationDropdown = ref(false);
                         Planner
                     </NavLink>
                     
-                    <NavLink :href="route('food-index')" v-if="$page.props.auth.user">
-                        <b>Food</b>
-                    </NavLink>
-                    
                     <NavLink :href="route('inventory')" :active="route().current('inventory')" v-if="$page.props.auth.user">
                         Inventory
                     </NavLink>
@@ -93,6 +89,7 @@ const showingNavigationDropdown = ref(false);
                         </template>
 
                         <template #content>
+                            <DropdownLink :href="route('food-index')"> Manage Food </DropdownLink>
                             <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
                             <DropdownLink :href="route('logout')" method="post" as="button">
                                 Log Out
