@@ -9,13 +9,13 @@
         <div class="py-4 lg:py-8">
 
             <div class="mx-auto mb-4 w-[95%] max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white rounded-lg shadow-sm ">
-                    <h2 class="p-6">What's goin on, then?</h2>
+                <div class="overflow-hidden shadow-sm ">
+                    <h2 class="px-2 py-4 md:px-6 md:p-6">What's goin on, then?</h2>
 
-                    <div class="p-6 mb-4 ">
+                    <div class="px-2 py-2 mb-4 md:px-6 md:p-6 ">
                         <h3 class="text-lg">Meals</h3>
 
-                        <div v-for="entry of entries" :key="entry.id" class="w-full text-xs border-b dark:border-neutral-500">
+                        <div v-for="entry of entries" :key="entry.id" class="w-full p-4 m-2 text-xs bg-white border-b rounded-lg dark:border-neutral-500">
                             <div class="flex flex-wrap items-center w-full py-4 md:py-0 md:flex-row" v-if="entry.entry_type == 'Meal' || entry.entry_type == 'Recipe'">
                                 <div class="w-full md:py-4 md:w-1/6 md:w-2/12">
                                     <span :class="entry.in_past ? 'text-red-600 font-bold' : '' ">{{ entry.date_time_formatted }}</span> 
@@ -81,17 +81,19 @@
 
                     </div>
 
-                    <div class="p-6">
+                    <div class="px-2 py-4 md:p-6">
                         <h3 class="text-lg">Workouts</h3>
+                        <hr>
                         
-                         <div v-for="entry of entries" :key="entry.id" class="w-full text-xs border-b dark:border-neutral-500">
-                            <div class="flex flex-wrap w-full py-4 md:py-0 md:flex-row" v-if="entry.entry_type == 'Workout' || entry.entry_type == 'Custom Workout'">
+                         <div v-for="entry of entries" :key="entry.id" 
+                                class="w-full p-4 mb-2 text-xs bg-white border-b rounded-lg dark:border-neutral-500">
+                            <div class="flex flex-wrap w-full py-4 md:py-0 md:flex-row">
                                 <div class="w-full md:w-1/4 md:py-4">
                                     <span :class="entry.in_past ? 'text-red-600 font-bold' : '' ">{{ entry.date_time_formatted }}</span>
                                 </div>
                                 <div class="w-full italic md:w-1/4 md:py-4">{{ entry.date_time_human }} </div>
                                 <div class="w-full my-4 font-bold md:w-1/4 md:py-4 md:my-0">
-                                    <span class="capitalize">{{ entry.workout ? entry.workout.name : entry.custom_workout.name }}</span>
+                                    <!-- <span class="capitalize">{{ entry.workout ? entry.workout.name : entry.custom_workout.name }}</span> -->
                                 </div>
                                 <div class="flex items-center gap-1 md:w-1/4 md:py-4">
                                     <span class="px-2 py-1 bg-green-100 border border-green-200 rounded-full select-none">Completed?</span>
@@ -123,7 +125,7 @@
 
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { reactive, watch, ref } from "vue";
+import { reactive, watch, ref, computed } from "vue";
 import { router } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
@@ -163,4 +165,9 @@ let completeMeal = (entry) => {
         preserveState: true
     });
 };
+
+
+// const mealEntries = computed( function() { 
+//     return props.entries.filter(entry => entry.entry_type === 'meal');
+// });
 </script>
