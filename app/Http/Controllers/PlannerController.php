@@ -12,6 +12,7 @@ use App\Models\FoodItem;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Models\CustomWorkout;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class PlannerController extends Controller
@@ -59,7 +60,14 @@ class PlannerController extends Controller
         $sortedMeals = $meals->sortByDesc('match_percent')->values();
 
         $custom_workouts = $user->workouts;
-        $shopping_list = $user->shopping_list;
+        
+        $shopping_list = $user->shopping_list->map( function($item){
+            $item->shopping_list_id = $item->pivot['id'];
+            return $item;
+        });
+    
+        $shopping_list = $shopping_list->sortBy('name')->values();
+        $shopping_list_ids = $shopping_list->pluck('id')->toArray();
         $workouts = Workout::all();
 
         return Inertia::render('Planner')->with([
@@ -68,7 +76,8 @@ class PlannerController extends Controller
             'workouts' => $workouts,
             'custom_workouts' => $custom_workouts,
             'entries' => $entries,
-            'shopping_list' => $shopping_list
+            'shopping_list' => $shopping_list,
+            'shopping_list_ids' => $shopping_list_ids,
         ]);
     }
 
@@ -146,10 +155,9 @@ class PlannerController extends Controller
         return redirect('/planner');
     }
     
-    public function removeFromList(FoodItem $fooditem)
+    public function removeFromList($shopping_list_id)
     {
-        Auth::user()->shopping_list()->dettach($fooditem->id);
-
+        $remove = DB::table('shopping_list')->where('id', $shopping_list_id)->delete();
         return redirect('/planner');
     }
     

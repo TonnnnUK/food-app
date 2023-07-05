@@ -54,7 +54,8 @@ class User extends Authenticatable
     }
 
     public function food_items(){
-        return $this->belongsToMany(FoodItem::class, 'user_food_items')->withTimestamps();
+        return $this->belongsToMany(FoodItem::class, 'user_food_items')
+                    ->withTimestamps();
     }
 
     public function workouts(){
@@ -70,7 +71,9 @@ class User extends Authenticatable
     }
 
     public function shopping_list(){
-        return $this->belongsToMany(FoodItem::class, 'shopping_list', 'user_id', 'food_item_id')->withTimestamps();
+        return $this->belongsToMany(FoodItem::class, 'shopping_list', 'user_id', 'food_item_id')
+                    ->withPivot(['id', 'food_item_id', 'user_id'])
+                    ->withTimestamps();
     }
 
 }

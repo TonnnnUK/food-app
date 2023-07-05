@@ -55,14 +55,14 @@
                     <div class="w-1/2 sm:w-1/3 md:w-auto"
                         v-for="food_type of food_types" :key="food_type.id"
                     >
-                        <span class="w-[95%] md:w-auto block px-2 py-2 focus:bg-orange-400 transition duration-200 bg-blue-300 border rounded-lg select-none md:w-auto md:px-4 hover:cursor-pointer hover:bg-orange-400"      
+                        <span class="w-[95%] md:w-auto block px-2 py-2 focus:bg-orange-400 capitalize transition duration-200 bg-blue-300 border rounded-lg select-none md:w-auto md:px-4 hover:cursor-pointer hover:bg-orange-400"      
                             v-on:click="selectFoodType(food_type.id)"
                         >
                             {{food_type.name}}
                         </span>
                     </div>
                     <div class="w-1/2 sm:w-1/3 md:w-auto">
-                        <span class="w-[95%] md:w-auto block px-2 py-2 focus:bg-orange-400 transition duration-200 bg-blue-300 border rounded-lg md:w-auto md:px-2 hover:cursor-pointer hover:bg-orange-400" v-on:click="selectFoodType('shopping_list')">
+                        <span class="w-[95%] md:w-auto block px-2 py-2 focus:bg-orange-400 capitalize transition duration-200 bg-blue-300 border rounded-lg md:w-auto md:px-2 hover:cursor-pointer hover:bg-orange-400" v-on:click="selectFoodType('shopping_list')">
                             shopping list
                         </span>
                     </div>
@@ -70,7 +70,7 @@
                 <div class="relative flex flex-wrap mt-4 md:mt-2 gap-y-2 sm:gap-y-0">
                     <span v-if="foodItems && Object.keys(foodItems).length > 0" class="absolute right-4" v-on:click="resetItems()">x</span>
                     <div v-for="item of foodItems" :key="item.id" class="flex items-center w-full sm:w-1/2 lg:w-1/3">
-                        <label class="flex items-center gap-2 p-1 mb-1 text-lg border border-gray-100 cursor-pointer hover:border-gray-400 md:text-sm">
+                        <label class="flex items-center gap-2 p-1 mb-1 text-lg capitalize border border-gray-100 cursor-pointer hover:border-gray-400 md:text-sm">
                             <input type="checkbox" v-model="selectedItems" :id="item.id" :value="item.id"> 
                             {{ item.name }}
                         </label>

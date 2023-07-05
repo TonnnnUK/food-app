@@ -72,7 +72,7 @@ Route::middleware('auth')->group(function () {
     Route::post('food', [FoodController::class, 'save'])->name('add-food-item');
 
     Route::post('shopping-list/add/{fooditem}', [PlannerController::class, 'addToList'])->name('add-to-shopping-list');
-    Route::post('shopping-list/remove/{fooditem}', [PlannerController::class, 'removeFromList'])->name('remove-from-shopping-list');
+    Route::post('shopping-list/remove/{id}', [PlannerController::class, 'removeFromList'])->name('remove-from-shopping-list');
 });
 
 Route::get('/exercises', [ExerciseController::class, 'index'])->name('exercises');

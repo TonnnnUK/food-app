@@ -118,32 +118,53 @@
                         
                         <div class="hidden w-full border-b lg:flex dark:border-neutral-500">
                             <div class="w-1/3 px-6 py-4">Meal</div>
-                            <div class="w-1/3 px-6 py-4">Ingredients</div>
-                            <div class="w-1/3 px-6 py-4">Missing</div>
+                            <div class="w-2/3 px-6 py-4">Ingredients</div>
                         </div>
                         <div class="flex flex-col w-full">
-                            <div class="flex flex-wrap items-center border-b dark:border-neutral-500" v-for="meal of meals" :key="meal.id">
-                                <div class="w-1/2 px-6 py-4 font-medium lg:w-4/12">
+                            <div class="flex flex-wrap items-center py-2 my-2 border-b dark:border-neutral-500 gap-y-2" v-for="meal of meals" :key="meal.id">
+                                <div class="w-full font-medium sm:px-2 sm:py-2 sm:w-1/2 lg:w-4/12">
                                     <Link :href="route('meal-info', meal.id)" class="text-blue-600 capitalize hover:text-blue-800 hover:underline">{{ meal.name }}</Link>
                                     <div class="inline">
                                         <span v-if="meal.match_percent > 90" class="ml-2 text-green-300"><i class="fas fa-check"></i></span>
                                     </div>
                                 </div>
-                                <div class="w-1/2 px-6 py-4 lg:w-4/12">
+                                <div class="w-full sm:px-2 sm:py-2 sm:w-1/2 lg:w-4/12">
                                     {{ meal.inventory_match }} / {{ meal.ingredient_count }} items in your inventory ({{ meal.match_percent ? meal.match_percent : 0 }}%) 
                                 </div>
-                                <div class="flex w-full gap-2 px-6 lg:w-4/12" v-if="Object.keys(meal.missingItems).length > 0">
+                                <div class="flex flex-col w-full sm:px-2" v-if="Object.keys(meal.missingItems).length > 0">
                                     <div>
-                                        <small>Missing:</small> 
-                                        <span class="inline-block px-2 py-1 my-1 ml-2 text-xs transition duration-200 delay-100 bg-gray-200 rounded-full cursor-pointer group hover:bg-green-100" v-for="item of meal.missingItems" :key="item.key">
-                                            {{ item.name}}
+                                        <small>Missing Items</small> 
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="flex flex-wrap items-center justify-between px-2 py-2 my-1 ml-2 bg-gray-100 gap-y-2 md:text-xs" 
+                                            v-for="item of meal.missingItems" :key="item.id"
+                                        >
+                                            
+                                            <span v-on:click="selectMissingItem(meal.id, item.id)" class="capitalize cursor-pointer select-none md:w-auto hover:font-bold">{{ item.name}}</span>
 
-                                            <span class="absolute inline-block ml-2 transition duration-200 opacity-0 group-hover:relative group-hover:opacity-100 hover:underline hover:text-blue-800"
-                                                v-on:click="addToList(item)"
-                                            >
-                                                Add to list
-                                            </span> 
-                                        </span>
+                                            <div class="inline-flex items-center gap-x-4 gap-y-2 sm:w-auto" v-if="data.expandMissing.meal == meal.id && data.expandMissing.item == item.id">
+                                                <small>Add to</small> 
+                                                <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-gray-200 rounded-full select-none"
+                                                    v-if="shopping_list_ids.includes(item.id)"
+                                                >
+                                                    In shopping list
+                                                </span>
+                                                <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-blue-100 rounded-full cursor-pointer select-none hover:bg-blue-200"
+                                                    v-on:click="addToList(item)"
+                                                    v-if="!shopping_list_ids.includes(item.id)"
+                                                >
+                                                    Shopping list
+                                                </span> 
+                                                <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-orange-100 rounded-full cursor-pointer select-none hover:bg-orange-200"
+                                                    v-on:click="addToList(item)"
+                                                >
+                                                    Inventory
+                                                </span> 
+                                                <small class="p-2 cursor-pointer hover:font-bold" v-on:click="data.expandMissing = {meal: 0, item: 0}">
+                                                    x
+                                                </small>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +205,11 @@
                             <div class="flex flex-wrap items-center w-full p-2 my-1 group sm:w-1/2" v-for="item of shopping_list" :key="item.id">
                                 <span class="w-full">
                                     {{ item.name }}
-                                    <span class="w-auto p-1 opacity-0 cursor-pointer group-hover:opacity-100 text-default hover:text-red-600">x</span>
+                                    <span class="w-auto p-1 opacity-0 cursor-pointer group-hover:opacity-100 text-default hover:text-red-600"
+                                        v-on:click="removeFromList(item)"
+                                    >
+                                        x
+                                    </span>
                                 </span>
                             </div>
                             
@@ -219,7 +244,8 @@
         'workouts': Object,
         'custom_workouts': Object,
         'entries': Object,
-        'shopping_list': Object
+        'shopping_list': Object,
+        'shopping_list_ids': Array,
     });
 
     let data = reactive({
@@ -259,7 +285,11 @@
                 year: 0
             }
         },
-        deleteEntryId: 0
+        deleteEntryId: 0,
+        expandMissing: {
+            meal: 0,
+            item: 0,
+        },
     });
 
     let changeTab = (tab) => {
@@ -342,6 +372,21 @@
 
     let addToList = (item ) => {
         router.post(`/shopping-list/add/${item.id}`, {
+            preserveState: true
+        });
+    }
+
+
+    let selectMissingItem = ( meal, item ) => {
+        data.expandMissing = {
+            meal: meal,
+            item: item
+        }
+        console.log('selcting missing item');
+    };
+
+    let removeFromList = ( item ) => {
+        router.post(`/shopping-list/remove/${item.shopping_list_id}`, {
             preserveState: true
         });
     }
