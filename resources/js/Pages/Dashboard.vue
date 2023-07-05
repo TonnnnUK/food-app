@@ -104,8 +104,8 @@
                     <div class="p-6">
                         <h3 class="mb-2 text-lg md:mb-4">Shopping List</h3>
 
-                        <div class="flex flex-col capitalize">
-                            <div v-for="item of shopping_list" :key="item.id">
+                        <div class="flex flex-wrap capitalize">
+                            <div class="w-full sm:w-1/2 lg:w-1/3" v-for="item of shopping_list" :key="item.id">
                                 {{ item.name }}
                             </div>
                         </div>

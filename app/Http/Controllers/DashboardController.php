@@ -37,6 +37,7 @@ class DashboardController extends Controller
 
         
         $shopping_list = $user->shopping_list;
+        $shopping_list = $shopping_list->sortBy('name')->values();
 
         return Inertia::render('Dashboard', [
             'entries' => $entries,

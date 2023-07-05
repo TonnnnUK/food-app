@@ -136,33 +136,53 @@
                                         <small>Missing Items</small> 
                                     </div>
                                     <div class="flex flex-col">
-                                        <div class="flex flex-wrap items-center justify-between px-2 py-2 my-1 ml-2 bg-gray-100 gap-y-2 md:text-xs" 
+                                        <div class="flex flex-col px-2 py-2 my-1 ml-2 bg-gray-100 sm:flex-wrap sm:flex-row gap-y-2 md:text-xs" 
                                             v-for="item of meal.missingItems" :key="item.id"
                                         >
-                                            
-                                            <span v-on:click="selectMissingItem(meal.id, item.id)" class="capitalize cursor-pointer select-none md:w-auto hover:font-bold">{{ item.name}}</span>
 
-                                            <div class="inline-flex items-center gap-x-4 gap-y-2 sm:w-auto" v-if="data.expandMissing.meal == meal.id && data.expandMissing.item == item.id">
-                                                <small>Add to</small> 
-                                                <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-gray-200 rounded-full select-none"
-                                                    v-if="shopping_list_ids.includes(item.id)"
-                                                >
-                                                    In shopping list
+                                            <div class="inline-flex items-center justify-between sm:mr-8">
+                                                <span v-on:click="selectMissingItem(meal.id, item.id)" 
+                                                    class="capitalize cursor-pointer select-none md:w-auto hover:font-bold">
+                                                    {{ item.name}}
                                                 </span>
-                                                <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-blue-100 rounded-full cursor-pointer select-none hover:bg-blue-200"
-                                                    v-on:click="addToList(item)"
-                                                    v-if="!shopping_list_ids.includes(item.id)"
+                                                <span class="block p-2 cursor-pointer text-default hover:font-bold sm:hidden" 
+                                                        v-on:click="data.expandMissing = {meal: 0, item: 0}"
+                                                         v-if="data.expandMissing.meal == meal.id && data.expandMissing.item == item.id"
                                                 >
-                                                    Shopping list
-                                                </span> 
-                                                <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-orange-100 rounded-full cursor-pointer select-none hover:bg-orange-200"
-                                                    v-on:click="addToList(item)"
-                                                >
-                                                    Inventory
-                                                </span> 
-                                                <small class="p-2 cursor-pointer hover:font-bold" v-on:click="data.expandMissing = {meal: 0, item: 0}">
                                                     x
-                                                </small>
+                                                </span>
+                                            </div>    
+
+                                            <div class="inline-flex flex-wrap items-center sm:flex-row sm:items-center gap-x-2 gap-y-2 sm:w-auto" v-if="data.expandMissing.meal == meal.id && data.expandMissing.item == item.id">
+                                                <small class="w-full sm:w-auto">Add to</small> 
+                                                <div>
+                                                    <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-gray-200 rounded-full select-none"
+                                                        v-if="shopping_list_ids.includes(item.id)"
+                                                    >
+                                                        In shopping list
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-blue-100 rounded-full cursor-pointer select-none hover:bg-blue-200"
+                                                        v-on:click="addToList(item)"
+                                                        v-if="!shopping_list_ids.includes(item.id)"
+                                                    >
+                                                        Shopping list
+                                                    </span> 
+                                                </div>
+                                                <div>
+                                                    <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-orange-100 rounded-full cursor-pointer select-none hover:bg-orange-200"
+                                                        v-on:click="addToList(item)"
+                                                    >
+                                                        Inventory
+                                                    </span> 
+                                                </div>
+                                                <span class="hidden p-2 cursor-pointer sm:block text-default hover:font-bold" 
+                                                        v-on:click="data.expandMissing = {meal: 0, item: 0}"
+                                                         v-if="data.expandMissing.meal == meal.id && data.expandMissing.item == item.id"
+                                                >
+                                                    x
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -203,7 +223,7 @@
 
                         <div class="flex flex-wrap my-4 text-sm">
                             <div class="flex flex-wrap items-center w-full p-2 my-1 group sm:w-1/2" v-for="item of shopping_list" :key="item.id">
-                                <span class="w-full">
+                                <span class="w-full capitalize">
                                     {{ item.name }}
                                     <span class="w-auto p-1 opacity-0 cursor-pointer group-hover:opacity-100 text-default hover:text-red-600"
                                         v-on:click="removeFromList(item)"
