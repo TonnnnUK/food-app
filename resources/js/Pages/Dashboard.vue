@@ -15,16 +15,16 @@
                     <div class="p-6 mb-4 ">
                         <h3 class="text-lg">Meals</h3>
 
-                        <div v-for="entry of entries" :key="entry.id" class="text-xs border-b dark:border-neutral-500">
-                            <div class="flex flex-wrap py-4 md:py-0 md:flex-row" v-if="entry.entry_type == 'Meal' || entry.entry_type == 'Recipe'">
-                                <div class="w-full md:py-4 md:w-40">
+                        <div v-for="entry of entries" :key="entry.id" class="w-full text-xs border-b dark:border-neutral-500">
+                            <div class="flex flex-wrap items-center w-full py-4 md:py-0 md:flex-row" v-if="entry.entry_type == 'Meal' || entry.entry_type == 'Recipe'">
+                                <div class="w-full md:py-4 sm:w-1/6 md:w-2/12">
                                     <span :class="entry.in_past ? 'text-red-600 font-bold' : '' ">{{ entry.date_time_formatted }}</span> 
                                 </div>
-                                <div class="w-full italic md:py-4 md:w-28">{{ entry.date_time_human }} </div>
-                                <div class="w-full my-4 font-bold md:py-4 md:w-60 md:my-0">
+                                <div class="w-full italic md:py-4 sm:w-1/6 md:w-2/12">{{ entry.date_time_human }} </div>
+                                <div class="w-full my-4 font-bold md:py-4 sm:w-1/3 md:w-5/12 md:my-0">
                                     <span class="capitalize">{{ entry.meal ? entry.meal.name : entry.recipe.name }}</span>
                                 </div>
-                                <div class="flex items-center gap-1 md:py-4">
+                                <div class="flex items-center gap-1 md:py-4 sm:w-1/4 md:w-3/12">
                                     <div>
                                         <span class="px-2 py-1 mx-1 transition duration-200 bg-green-100 border border-green-200 rounded-full cursor-pointer select-none hover:bg-green-200"
                                             v-on:click="data.handleComplete = entry.id; data.handlingLeftovers = 0;"
@@ -84,17 +84,17 @@
                     <div class="p-6">
                         <h3 class="text-lg">Workouts</h3>
                         
-                         <div v-for="entry of entries" :key="entry.id" class="text-xs border-b dark:border-neutral-500" >
-                            <div class="flex flex-wrap py-4 md:py-0 md:flex-row" v-if="entry.entry_type == 'Workout' || entry.entry_type == 'Custom Workout'">
-                                <div class="w-full md:py-4 md:w-40">
+                         <div v-for="entry of entries" :key="entry.id" class="w-full text-xs border-b dark:border-neutral-500">
+                            <div class="flex flex-wrap w-full py-4 md:py-0 md:flex-row" v-if="entry.entry_type == 'Workout' || entry.entry_type == 'Custom Workout'">
+                                <div class="w-full md:w-1/4 md:py-4">
                                     <span :class="entry.in_past ? 'text-red-600 font-bold' : '' ">{{ entry.date_time_formatted }}</span>
                                 </div>
-                                <div class="w-full italic md:py-4 md:w-28">{{ entry.date_time_human }} </div>
-                                <div class="w-full my-4 font-bold md:py-4 md:w-60 md:my-0">
+                                <div class="w-full italic md:w-1/4 md:py-4">{{ entry.date_time_human }} </div>
+                                <div class="w-full my-4 font-bold md:w-1/4 md:py-4 md:my-0">
                                     <span class="capitalize">{{ entry.workout ? entry.workout.name : entry.custom_workout.name }}</span>
                                 </div>
-                                <div class="flex items-center gap-1 md:py-4">
-                                    <span class="px-2 py-1 bg-green-100 border border-green-200 rounded-full">Completed?</span>
+                                <div class="flex items-center gap-1 md:w-1/4 md:py-4">
+                                    <span class="px-2 py-1 bg-green-100 border border-green-200 rounded-full select-none">Completed?</span>
                                 </div>
                             </div>
                         </div>
