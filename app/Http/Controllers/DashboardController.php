@@ -34,13 +34,21 @@ class DashboardController extends Controller
                                         ->sortBy('date_time')->values();
 
         $locations = $user->locations;
-
         
         $shopping_list = $user->shopping_list;
         $shopping_list = $shopping_list->sortBy('name')->values();
 
+        $meal_entries = $entries->filter( function($entry){
+            return $entry->entry_type == 'Meal' || $entry->entry_type == 'Recipe';
+        });
+
+        $workout_entries = $entries->filter( function($entry){
+            return $entry->entry_type == 'Workout' || $entry->entry_type == 'Custom Workout';
+        });
+
         return Inertia::render('Dashboard', [
-            'entries' => $entries,
+            'workout_entries' => $workout_entries,
+            'meal_entries' => $meal_entries,
             'locations' => $locations,
             'shopping_list' => $shopping_list,
         ]);

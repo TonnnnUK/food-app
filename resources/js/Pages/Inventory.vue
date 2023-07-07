@@ -40,8 +40,7 @@
                             <div class="w-1/2 sm:w-1/3 md:w-auto" 
                                 v-for="location of locations" :key="location.id">
                                 <span class="block text-center whitespace-nowrap w-[95%] px-3 py-2 text-sm transition duration-200 border rounded-full cursor-pointer select-none" 
-                                    :class="location.id == data.addTo ? 'bg-green-100 border-green-300' : 'bg-gray-200 hover:bg-green-50 border-gray-300'"
-                                    
+                                    :class="location.id == data.addTo ? 'bg-green-100 border-green-300' : 'bg-white hover:bg-green-50 border-gray-300'"
                                     v-on:click="selectLocation(location.id)">
                                     {{location.name}}
                                 </span>
@@ -55,20 +54,21 @@
                     <div class="w-1/2 sm:w-1/3 md:w-auto"
                         v-for="food_type of food_types" :key="food_type.id"
                     >
-                        <span class="w-[95%] md:w-auto block px-2 py-2 focus:bg-orange-400 capitalize transition duration-200 bg-blue-300 border rounded-lg select-none md:w-auto md:px-4 hover:cursor-pointer hover:bg-orange-400"      
+                        <span class="w-[95%] md:w-auto block px-2 py-2 capitalize transition duration-200 bg-blue-100 border border-blue-300 rounded-lg select-none md:w-auto md:px-4 hover:cursor-pointer hover:bg-orange-100 hover:border-orange-300"      
                             v-on:click="selectFoodType(food_type.id)"
                         >
                             {{food_type.name}}
                         </span>
                     </div>
                     <div class="w-1/2 sm:w-1/3 md:w-auto">
-                        <span class="w-[95%] md:w-auto block px-2 py-2 focus:bg-orange-400 capitalize transition duration-200 bg-blue-300 border rounded-lg md:w-auto md:px-2 hover:cursor-pointer hover:bg-orange-400" v-on:click="selectFoodType('shopping_list')">
+                        <span class="w-[95%] md:w-auto block px-2 py-2 capitalize transition duration-200 bg-blue-100 border border-blue-300 rounded-lg md:w-auto md:px-2 hover:cursor-pointer hover:bg-orange-100 hover:border-orange-300" 
+                            v-on:click="selectFoodType('shopping_list')">
                             shopping list
                         </span>
                     </div>
                 </div>
                 <div class="relative flex flex-wrap mt-4 md:mt-2 gap-y-2 sm:gap-y-0">
-                    <span v-if="foodItems && Object.keys(foodItems).length > 0" class="absolute right-4" v-on:click="resetItems()">x</span>
+                    <span v-if="foodItems && Object.keys(foodItems).length > 0" class="absolute p-2 cursor-pointer right-4" v-on:click="resetItems()">x</span>
                     <div v-for="item of foodItems" :key="item.id" class="flex items-center w-full sm:w-1/2 lg:w-1/3">
                         <label class="flex items-center gap-2 p-1 mb-1 text-lg capitalize border border-gray-100 cursor-pointer hover:border-gray-400 md:text-sm">
                             <input type="checkbox" v-model="selectedItems" :id="item.id" :value="item.id"> 
@@ -78,7 +78,7 @@
                 </div>
 
                 <div v-if="data.addTo > 0 && foodItems && foodItems.length > 0">
-                    <button class="px-5 py-2 my-2 text-white bg-blue-700 rounded-lg" v-on:click="addFoodItems()">Add items to {{locations[data.addTo-1].name}}</button>
+                    <button class="px-5 py-2 my-2 text-white bg-blue-700 rounded-lg lg:text-sm" v-on:click="addFoodItems()">Add items to {{locations[data.addTo-1].name}}</button>
                 </div>
             </div>
         </section>

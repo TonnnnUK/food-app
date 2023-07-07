@@ -70,6 +70,11 @@ class PlannerController extends Controller
         $shopping_list_ids = $shopping_list->pluck('id')->toArray();
         $workouts = Workout::all();
 
+        if( isset(request()->search) ){
+            $search = request()->search;
+            $foodItems = FoodItem::where('name', 'LIKE', "%$search%")->get();
+        }
+
         return Inertia::render('Planner')->with([
             'recipes' => $recipes,
             'meals' => $sortedMeals,
@@ -78,6 +83,7 @@ class PlannerController extends Controller
             'entries' => $entries,
             'shopping_list' => $shopping_list,
             'shopping_list_ids' => $shopping_list_ids,
+            'foodItems' => isset($foodItems) ? $foodItems : null
         ]);
     }
 
@@ -160,5 +166,6 @@ class PlannerController extends Controller
         $remove = DB::table('shopping_list')->where('id', $shopping_list_id)->delete();
         return redirect('/planner');
     }
-    
+
+
 }

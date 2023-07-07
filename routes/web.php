@@ -73,6 +73,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('shopping-list/add/{fooditem}', [PlannerController::class, 'addToList'])->name('add-to-shopping-list');
     Route::post('shopping-list/remove/{id}', [PlannerController::class, 'removeFromList'])->name('remove-from-shopping-list');
+
 });
 
 Route::get('/exercises', [ExerciseController::class, 'index'])->name('exercises');

@@ -9,10 +9,10 @@
         </template>
 
 
-        <div class="p-4 sm:p-6 lg:p-8 xl:p-12">
+        <div class="p-4 sm:p-6 lg:p-8 xl:px-12">
 
 
-            <form @submit.prevent="addItem" class="flex flex-wrap items-center gap-2 my-5 ">
+            <form @submit.prevent="addItem" class="flex flex-wrap items-center gap-2 mb-8 ">
                 <label class="block w-full text-xs md:w-auto" for="">New Item</label>
                 <div class="flex flex-col w-full gap-2 md:flex-row lg:w-1/2">
                     <input class="w-full text-sm border-gray-300 rounded-lg sm:w-full lg:w-10/12" placeholder="Enter an ingredient" type="text" v-model="newItem.name">
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="flex flex-wrap">
-                        <span v-for="item of fooditems" :key="item.id" class="w-full mb-2 md:w-1/2 lg:w-1/4">{{item.name}}</span>
+                        <span v-for="item of fooditems" :key="item.id" class="w-full mb-2 capitalize md:w-1/2 lg:w-1/4">{{item.name}}</span>
                     </div>
                 </div>
             </div>

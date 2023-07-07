@@ -12,16 +12,16 @@
         <div class="p-4 sm:p-6 lg:p-8 xl:p-12">
 
 
-            <form @submit.prevent="addMeal" class="flex flex-col gap-2 my-2 md:my-5 md:flex-row md:flex-wrap">
+            <form @submit.prevent="addMeal" class="flex flex-col w-full gap-2 my-2 md:items-center md:my-5 md:flex-row md:flex-wrap">
                 <label class="block w-auto" for="">New Meal</label>
-                <div class="flex flex-col w-full gap-y-2 md:gap-2 md:flex-row lg:w-auto">
-                    <div class="w-[95%]">
-                        <input class="w-[95%] text-sm border-gray-300 rounded-lg" placeholder="Enter a meal name" type="text" v-model="newMeal.name">
+                <div class="flex flex-col md:items-center gap-y-2 md:gap-x-2 md:flex-row lg:w-auto">
+                    <div class="w-[95%] lg:w-1/3">
+                        <input class="w-[95%] md:w-full text-sm border-gray-300 rounded-lg" placeholder="Enter a meal name" type="text" v-model="newMeal.name">
                     </div>
                     <div class="w-1/3">
                         <input class="w-[95%] text-sm border-gray-300 rounded-lg" placeholder="Servings" type="text" v-model="newMeal.servings">
                     </div>
-                    <div class="w-full ">
+                    <div class="w-full md:w-auto">
                         <button class="px-4 py-1 text-lg text-white bg-green-500 rounded-lg md:text-sm hover:bg-green-600">Add</button>
                     </div>
                 </div>

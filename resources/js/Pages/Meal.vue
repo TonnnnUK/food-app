@@ -122,10 +122,6 @@
 
                         </div>
 
-                        <button :class="{saveEnable : 'bg-green-50'}" 
-                                class="px-4 py-1 mt-8 bg-gray-200 border border-gray-400 rounded-lg">
-                            Save
-                        </button>
                     </div>
                 </div>
             </div>

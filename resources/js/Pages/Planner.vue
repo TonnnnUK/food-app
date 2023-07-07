@@ -11,22 +11,23 @@
         <div class="p-2 sm:p-4">
 
             <!-- TABS  -->
-            <div class="mx-auto my-2 sm:my-4 max-w-7xl">
+            <div class="mx-auto mt-2 mb-2 sm:mt-4 max-w-7xl md:pl-12 md:mb-0">
                 <div class="flex flex-wrap gap-2 text-center">
-                    <div v-for="tab of data.tabs" :key="tab"
+                    <div v-for="tab of data.tabs" :key="tab.label"
                         class="w-[48%] sm:w-auto"
                     >
                         <PlannerTab 
-                            :class="data.selectedContent == tab ? 'bg-purple-300 font-bold' : 'bg-white hover:bg-purple-300'"
+                            class="select-none"
+                            :class="data.selectedContent == tab.label ? `${tab.bg} font-bold` : 'bg-white hover:font-bold ' + `${tab.bg} hover:${tab.hover}`"
                             v-on:click="changeTab(tab)"
-                            :item="tab"
+                            :item="tab.label"
                         />
                     </div>
                 </div>
             </div>
 
             <!-- CALENDAR -->
-            <div class="mx-auto mt-4 max-w-7xl sm:px-6 lg:px-8 md:mt-8" v-if="data.selectedContent == 'calendar'">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 " v-if="data.selectedContent == 'calendar'">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <div class="flex items-center justify-between mb-4">
@@ -69,19 +70,29 @@
                                 <div class="my-2">
                                     <span v-for="entry of entries" :key="entry.id">
                                         <span class="" v-if="matchingDate(day, entry) && entry.id != data.deleteEntryId" v-on:click="data.deleteEntryId = entry.id"> 
-                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-red-100 border border-red-200 rounded-lg hover:cursor-pointer hover:bg-red-200" v-if="entry.meal">
+                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-red-100 border border-red-200 rounded-lg hover:cursor-pointer hover:bg-red-200" 
+                                                v-if="entry.meal"
+                                            >
                                                 {{ entry.meal.name }} 
                                             </small>
-                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-yellow-100 border border-yellow-200 rounded-lg hover:cursor-pointer hover:bg-yellow-200" v-if="entry.recipe">
+                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-yellow-100 border border-yellow-200 rounded-lg hover:cursor-pointer hover:bg-yellow-200" 
+                                                v-if="entry.recipe"
+                                            >
                                                 {{ entry.recipe.name }} 
                                             </small>
-                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-blue-100 border border-blue-200 rounded-lg hover:cursor-pointer hover:bg-blue-200" v-if="entry.workout">
+                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-blue-100 border border-blue-200 rounded-lg hover:cursor-pointer hover:bg-blue-200" 
+                                                v-if="entry.workout"
+                                            >
                                                 {{ entry.workout.name }} 
                                             </small>
-                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-purple-100 border border-purple-200 rounded-lg hover:cursor-pointer hover:bg-purple-200" v-if="entry.custom_workout">
+                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-green-100 border border-green-200 rounded-lg hover:cursor-pointer hover:bg-green-200" 
+                                                v-if="entry.custom_workout"
+                                            >
                                                 {{ entry.custom_workout.name }} 
                                             </small>
-                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-gray-100 border border-gray-200 rounded-lg hover:cursor-pointer hover:bg-gray-200" v-if="entry.entry_type == 'Note'">
+                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-gray-100 border border-gray-200 rounded-lg hover:cursor-pointer hover:bg-gray-200" 
+                                                v-if="entry.entry_type 
+                                            == 'Note'">
                                                 {{ entry.entry_data.notes }} 
                                             </small>
                                         </span>
@@ -111,7 +122,7 @@
             </div>
 
             <!-- MEALS -->
-            <div class="mx-auto mt-4 max-w-7xl sm:px-6 lg:px-8 md:mt-8" v-if="data.selectedContent == 'meals'">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 " v-if="data.selectedContent == 'meals'">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <h3 class="text-lg">Your meals</h3>
@@ -194,7 +205,7 @@
             </div>
 
             <!-- WORKOUTS -->
-            <div class="mx-auto mt-4 max-w-7xl sm:px-6 lg:px-8 md:mt-8" v-if="data.selectedContent == 'workouts'">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 " v-if="data.selectedContent == 'workouts'">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <h3 class="mb-4 text-lg">Your Workouts</h3>
@@ -216,21 +227,42 @@
             </div>
 
             <!-- SHOPPING LIST -->
-             <div class="mx-auto mt-4 max-w-7xl sm:px-6 lg:px-8 md:mt-8" v-if="data.selectedContent == 'shopping list'">
+             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 " v-if="data.selectedContent == 'shopping list'">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <h3 class="text-lg">Shopping List</h3>
+                        <h3 class="mb-2 text-lg md:mb-4">Shopping List</h3>
 
-                        <div class="flex flex-wrap my-4 text-sm">
-                            <div class="flex flex-wrap items-center w-full p-2 my-1 group sm:w-1/2" v-for="item of shopping_list" :key="item.id">
-                                <span class="w-full capitalize">
-                                    {{ item.name }}
-                                    <span class="w-auto p-1 opacity-0 cursor-pointer group-hover:opacity-100 text-default hover:text-red-600"
-                                        v-on:click="removeFromList(item)"
-                                    >
-                                        x
-                                    </span>
-                                </span>
+                        <div class="flex flex-col gap-2 mb-2 sm:items-center sm:flex-row md:justify-start">
+                            <label class="block pl-2 text-sm sm:w-auto sm:text-right">Add item</label>
+                            <TextInput class="sm:w-[75%] md:w-[50%]" type="text" placeholder="Search ingredients..." v-model="search"  />
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            <FoodItemPill v-for="item of foodItems" :key="item.id" :item="item.name" v-on:click="selectFoodItem(item)" />   
+                        </div>
+
+                        <div class="flex flex-wrap justify-between my-4 text-sm">
+                            <div class="flex flex-wrap items-center w-full p-2 my-1 group sm:w-[48%] bg-gray-50 border border-gray-200" v-for="item of shopping_list" :key="item.id">
+                                <div class="flex items-center justify-between w-full capitalize">
+                                    <input type="checkbox" v-model="data.listBulkAdd">
+                                    <span>{{ item.name }}</span>
+
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-1 text-xs transition duration-200 bg-orange-200 rounded-lg cursor-pointer hover:bg-orange-300" title="Item bought - Add to inventory">+</span>
+
+                                        <span class="w-auto p-1 opacity-0 cursor-pointer group-hover:opacity-100 text-default hover:text-red-600"
+                                            v-on:click="data.deleteShoppingItem = item.id"
+                                        >
+                                            x
+
+                                            <span class="hover:underline"
+                                                    v-if="item.id == data.deleteShoppingItem" 
+                                                    v-on:click="removeFromList(item)">
+                                                Delete
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                             
                         </div>
@@ -255,8 +287,11 @@
     import { reactive, watch, ref } from "vue";
     import { CalendarService } from '../Services/CalendarService';
     import PlannerTab from '@/Components/PlannerTab.vue'
+    import FoodItemPill from '@/Components/FoodItemPill.vue';
     import Modal from '@/Components/Modal.vue';
     import PlannerEntryForm from '@/Components/PlannerEntryForm.vue';
+    import debounce from "lodash/debounce";
+    import TextInput from '@/Components/TextInput.vue';
 
     const props = defineProps({
         'recipes': Object,
@@ -266,12 +301,34 @@
         'entries': Object,
         'shopping_list': Object,
         'shopping_list_ids': Array,
+        'foodItems': Object
     });
 
     let data = reactive({
         selectedContent: 'calendar',
         selectedMonth: '',
-        tabs: ['calendar', 'meals', 'workouts', 'shopping list'],
+        tabs: {
+            0: {
+                label: 'calendar',
+                bg: 'bg-purple-100',
+                hover: 'bg-purple-200'
+            },
+            1: {
+                label: 'meals',
+                bg: 'bg-blue-100',
+                hover: 'bg-blue-200'
+            },
+            2: {
+                label: 'workouts', 
+                bg: 'bg-green-100',
+                hover: 'bg-green-200'
+            },
+            3: {
+                label: 'shopping list',
+                bg: 'bg-orange-100',
+                hover: 'bg-orange-200'
+            }
+        },
         itemForm: {
             open: false,
         },
@@ -306,14 +363,17 @@
             }
         },
         deleteEntryId: 0,
+        deleteShoppingItem: 0,
         expandMissing: {
             meal: 0,
             item: 0,
         },
+        listBulkAdd: []
     });
 
     let changeTab = (tab) => {
-        data.selectedContent = tab;
+        data.selectedContent = tab.label;
+
     }
 
     let dt = new Date();
@@ -380,8 +440,6 @@
 
     
     let deleteEntry = ( entry ) => {
-
-        console.log('deleting entry', entry);
         
         router.delete(`/entry/${entry.id}`, {
             preserveState: true
@@ -410,5 +468,41 @@
             preserveState: true
         });
     }
+
+
+    // SHOPPING LIST TAB
+    // FOOD SEARCH //
+    const queryString = window.location.search;
+    const searchParams = new URLSearchParams(queryString);
+    const searchValue = searchParams.get('search');
+
+    let search = searchValue ? ref(searchValue) : ref('');
+    let addItem = {};
+
+    let watchSearch = () => {
+        watch( search, debounce( function(value){
+    
+            if ( value.length > 1 ) {
+                data.isSearching = true;
+                addItem.name = value.name;
+                addItem.id = value.id;
+            }
+            
+            router.get(`/planner`, { search: value }, {
+                preserveState: true
+            });
+    
+        }, 300) );
+    }
+
+    watchSearch();
+
+    let selectFoodItem = (item) => {
+        router.post(`shopping-list/add/${item.id}`, {
+            preserveState: true
+        });
+
+        search = '';
+    };
 
 </script>

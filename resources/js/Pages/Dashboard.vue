@@ -12,74 +12,10 @@
                 <div class="overflow-hidden ">
                     <h2 class="px-2 py-4 md:px-6 md:p-6">What's goin on, then?</h2>
 
-                    <div class="px-2 py-2 mb-4 md:px-6 md:p-6">
+                    <div class="px-2 py-2 mb-4 md:px-6 md:py-2">
                         <h3 class="text-lg">Meals</h3>
 
-                        <div v-for="entry of mealEntries" :key="entry.id" class="w-full p-4 m-2 text-xs bg-white border-b rounded-lg dark:border-neutral-500">
-                            <div class="flex flex-wrap items-center w-full py-4 md:py-0 md:flex-row" v-if="entry.entry_type == 'Meal' || entry.entry_type == 'Recipe'">
-                                <div class="w-full md:py-4 md:w-1/6 md:w-2/12">
-                                    <span :class="entry.in_past ? 'text-red-600 font-bold' : '' ">{{ entry.date_time_formatted }}</span> 
-                                </div>
-                                <div class="w-full italic md:py-4 md:w-1/6 md:w-2/12">{{ entry.date_time_human }} </div>
-                                <div class="w-full my-4 font-bold md:py-4 md:w-1/3 md:w-5/12 md:my-0">
-                                    <span class="capitalize">{{ entry.meal ? entry.meal.name : entry.recipe.name }}</span>
-                                </div>
-                                <div class="flex items-center gap-1 md:py-4 md:w-1/4 md:w-3/12">
-                                    <div>
-                                        <span class="px-2 py-1 mx-1 transition duration-200 bg-green-100 border border-green-200 rounded-full cursor-pointer select-none hover:bg-green-200"
-                                            v-on:click="data.handleComplete = entry.id; data.handlingLeftovers = 0;"
-                                        >
-                                            Finished
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span class="px-2 py-1 mx-1 transition duration-200 bg-yellow-200 border border-yellow-300 rounded-full cursor-pointer select-none hover:bg-yellow-300"
-                                            v-on:click="data.handlingLeftovers = entry.id; data.handleComplete = 0"
-                                        >
-                                            Leftovers?
-                                        </span>
-                                    </div>
-                                    <div class="px-2 py-1 text-lg cursor-pointer" v-if="data.handlingLeftovers == entry.id || data.handleComplete == entry.id" 
-                                        v-on:click="data.handlingLeftovers = 0; data.handleComplete = 0;">
-                                        x
-                                    </div>
-                                </div>
-                            </div>
-                            <div v-if="data.handlingLeftovers == entry.id">
-                                <div class="p-2 my-2" colspan="4">
-                                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-                                        <span>Enter leftovers portions</span>
-                                        <TextInput class="p-2 text-xs border border-gray-300" v-model="data.leftovers.qty" />
-                                        <SelectInput class="text-xs" v-model="data.leftovers.location">
-                                            <option value="0">-- Select location --</option>
-                                            <option v-for="location of locations" :key="location.id" :value="location.id">{{location.name}}</option>
-                                        </SelectInput>
-                                        <button class="px-3 py-2 text-white bg-green-500 border border-green-600 rounded-lg hover:bg-green-600" 
-                                            v-on:click="handleLeftovers(entry)">
-                                            Save
-                                        </button>   
-                                    </div>
-                                </div>
-                            </div>
-                            <div v-if="data.handleComplete == entry.id">
-                                <div class="p-2">
-                                    Remove from inventory: 
-
-                                    <div class="flex flex-wrap my-2 gap-x-2">
-                                        <label v-for="item of entry.meal != null ? entry.meal.ingredients : entry.recipe.ingredients" :key="item.id" class="w-full p-1 py-2 mx-2 cursor-pointer md:w-1/4 hover:bg-gray-200">
-                                            <input type="checkbox" v-model="data.itemsToRemove" :id="item.id" :value="item.id" class="mr-1">
-                                            {{ item.name }}
-                                        </label>
-
-                                    </div>
-                                    <button class="px-3 py-2 mt-2 text-white bg-green-500 border border-green-600 rounded-lg hover:bg-green-600"
-                                        v-on:click="completeMeal(entry);"
-                                    >Remove Items &amp; Complete</button>   
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div v-for="entry of recipeEntries" :key="entry.id" class="w-full p-4 m-2 text-xs bg-white border-b rounded-lg dark:border-neutral-500">
+                        <div v-for="entry of meal_entries" :key="entry.id" class="w-full p-4 m-2 text-xs bg-white border-b rounded-lg dark:border-neutral-500">
                             <div class="flex flex-wrap items-center w-full py-4 md:py-0 md:flex-row" v-if="entry.entry_type == 'Meal' || entry.entry_type == 'Recipe'">
                                 <div class="w-full md:py-4 md:w-1/6 md:w-2/12">
                                     <span :class="entry.in_past ? 'text-red-600 font-bold' : '' ">{{ entry.date_time_formatted }}</span> 
@@ -143,12 +79,17 @@
                             </div>
                         </div>
 
+                        <div class="w-full p-4 m-2 text-xs bg-white border-b rounded-lg dark:border-neutral-500" 
+                            v-if="Object.keys(meal_entries).length == 0 ">
+                            There's nothing planned, better get your arse in gear!
+                        </div>
+                    
                     </div>
 
-                    <div class="px-2 py-2 mb-4 md:px-6 md:p-6 ">
+                    <div class="px-2 py-2 mb-4 md:px-6 md:py-2 ">
                         <h3 class="text-lg">Workouts</h3>
                         
-                         <div v-for="entry of workoutEntries" :key="entry.id" 
+                         <div v-for="entry of workout_entries" :key="entry.id" 
                                 class="w-full p-4 mb-2 text-xs bg-white border-b rounded-lg dark:border-neutral-500">
                             <div class="flex flex-wrap w-full py-4 md:py-0 md:flex-row">
                                 <div class="w-full md:w-1/4 md:py-4">
@@ -156,29 +97,19 @@
                                 </div>
                                 <div class="w-full italic md:w-1/4 md:py-4">{{ entry.date_time_human }} </div>
                                 <div class="w-full my-4 font-bold md:w-1/4 md:py-4 md:my-0">
-                                    <span class="capitalize">{{ entry.workout.name }}</span>
+                                    <span class="capitalize">{{ entry.workout ? entry.workout.name : entry.custom_workout.name }}</span>
                                 </div>
                                 <div class="flex items-center gap-1 md:w-1/4 md:py-4">
                                     <span class="px-2 py-1 bg-green-100 border border-green-200 rounded-full select-none">Completed?</span>
                                 </div>
                             </div>
                         </div>
-                        
-                         <div v-for="entry of customWorkoutEntries" :key="entry.id" 
-                                class="w-full p-4 mb-2 text-xs bg-white border-b rounded-lg dark:border-neutral-500">
-                            <div class="flex flex-wrap w-full py-4 md:py-0 md:flex-row">
-                                <div class="w-full md:w-1/4 md:py-4">
-                                    <span :class="entry.in_past ? 'text-red-600 font-bold' : '' ">{{ entry.date_time_formatted }}</span>
-                                </div>
-                                <div class="w-full italic md:w-1/4 md:py-4">{{ entry.date_time_human }} </div>
-                                <div class="w-full my-4 font-bold md:w-1/4 md:py-4 md:my-0">
-                                    <span class="capitalize">{{ entry.custom_workout.name }}</span>
-                                </div>
-                                <div class="flex items-center gap-1 md:w-1/4 md:py-4">
-                                    <span class="px-2 py-1 bg-green-100 border border-green-200 rounded-full select-none">Completed?</span>
-                                </div>
-                            </div>
+
+                        <div class="w-full p-4 m-2 text-xs bg-white border-b rounded-lg dark:border-neutral-500" 
+                            v-if="Object.keys(workout_entries).length == 0 ">
+                            There's nothing planned, better get your arse in gear!
                         </div>
+
 
                     </div>
 
@@ -211,7 +142,8 @@ import TextInput from '@/Components/TextInput.vue';
 import SelectInput from '@/Components/SelectInput.vue';
 
 const props = defineProps({
-    entries: Object,
+    workout_entries: Object,
+    meal_entries: Object,
     locations: Object,
     shopping_list: Object,
 });
@@ -245,19 +177,4 @@ let completeMeal = (entry) => {
     });
 };
 
-
-const mealEntries = computed( function() { 
-    return props.entries.filter(entry => entry['entry_type'] === 'Meal');
-});
-
-const recipeEntries = computed( function() { 
-    return props.entries.filter(entry => entry['entry_type'] === 'Recipe');
-});
-const workoutEntries = computed( function() { 
-    return props.entries.filter(entry => entry['entry_type'] === 'Workout');
-});
-
-const customWorkoutEntries = computed( function() { 
-    return props.entries.filter(entry => entry['entry_type'] === 'Custom Workout');
-});
 </script>
