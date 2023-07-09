@@ -168,4 +168,45 @@ class PlannerController extends Controller
     }
 
 
+    public function generateList(){
+
+        $user = Auth::user();
+
+        $days = intval(request('days'));
+
+        $today = Carbon::today();
+        $endDay = Carbon::today()->addDays($days)->endOfDay();
+
+        $entries = Entry::whereIn('entry_type', ['Meal', 'Recipe'])->whereBetween('date_time', [$today, $endDay])->get();
+
+        // get ingredients for each entry
+        $items = collect();
+        $entries->map( function($entry) use ($items) {
+            if( $entry->entry_type == 'Meal'){
+                $entry->meal->ingredients->map( function($ing) use ($items){
+                    if (!$items->contains('id', $ing->id)) {
+                        $items->push($ing);
+                    }
+                });
+            } else {
+                $entry->recipe->ingredients->map( function($ing) use ($items){
+                    if (!$items->contains('id', $ing->id)) {
+                        $items->push($ing);
+                    }
+                });
+            }
+        });
+
+        $ids = $items->pluck('id')->toArray();
+        $shopping_list = $user->shopping_list->pluck('id')->toArray();
+        $inventory = $user->food_items->pluck('id')->toArray();
+        
+        $result = array_diff($ids, $shopping_list);
+        $result = array_diff($ids, $inventory);
+
+        $user->shopping_list()->attach($result);
+        return redirect('/planner');
+    }
+
+
 }

@@ -18,7 +18,7 @@
                     >
                         <PlannerTab 
                             class="select-none"
-                            :class="data.selectedContent == tab.label ? `${tab.bg} font-bold` : 'bg-white hover:font-bold ' + `${tab.bg} hover:${tab.hover}`"
+                            :class="data.selectedContent == tab.label ? `${tab.bg} font-bold` : 'bg-white hover:font-bold border border-gray-300 ' + `${tab.bg} hover:${tab.hover}`"
                             v-on:click="changeTab(tab)"
                             :item="tab.label"
                         />
@@ -34,19 +34,39 @@
                             <div>
                                 <h3 class="text-lg">Your Planner</h3>
                             </div>
-                            <div class="flex text-xs border rounded-lg">
-                                <div class="px-1 py-2 transition duration-200 bg-gray-200 rounded-l-lg hover:cursor-pointer hover:bg-gray-300"
-                                    @click="selectMonth(data.selectedMonth-1)"
+                            <div class="flex items-center gap-2 mx-2 lg:text-xs">
+                                <span class="">Generate Shopping list for</span>
+                                <div class="flex items-center gap-2">
+                                    <TextInput class="w-12 text-xs" type="text" v-model="data.generateListDays" />
+                                    <span>days</span>    
+                                </div>    
+                                <span class="px-3 py-1 transition duration-200 rounded-lg cursor-pointer"
+                                    :class="data.confirmGenerate ? 'bg-red-400 hover:bg-red-500' : 'bg-blue-100 hover:bg-blue-200'"
+                                    v-on:click="data.confirmGenerate = !data.confirmGenerate">
+                                    <span v-text="data.confirmGenerate ? 'x' : 'Generate'" />
+                                </span>
+                                <span class="px-3 py-1 transition duration-200 bg-green-200 rounded-lg cursor-pointer hover:underline"
+                                    v-if="data.confirmGenerate"
+                                    v-on:click="generateList()"
                                 >
-                                    &lt;
-                                </div>
-                                <div class="px-2 py-2">
-                                    {{ Calendar.months[data.selectedMonth] }}
-                                </div>
-                                <div class="px-1 py-2 transition duration-200 bg-gray-200 rounded-r-lg hover:cursor-pointer hover:bg-gray-300"
-                                    @click="selectMonth(data.selectedMonth+1)"
-                                >
-                                    &gt;
+                                    Confirm
+                                </span>
+                            </div>
+                            <div class="flex items-center gap 2">
+                                <div class="flex text-xs border rounded-lg">
+                                    <div class="px-1 py-2 transition duration-200 bg-gray-200 rounded-l-lg hover:cursor-pointer hover:bg-gray-300"
+                                        @click="selectMonth(data.selectedMonth-1)"
+                                    >
+                                        &lt;
+                                    </div>
+                                    <div class="px-2 py-2">
+                                        {{ Calendar.months[data.selectedMonth] }}
+                                    </div>
+                                    <div class="px-1 py-2 transition duration-200 bg-gray-200 rounded-r-lg hover:cursor-pointer hover:bg-gray-300"
+                                        @click="selectMonth(data.selectedMonth+1)"
+                                    >
+                                        &gt;
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +159,7 @@
                                         <span v-if="meal.match_percent > 90" class="ml-2 text-green-300"><i class="fas fa-check"></i></span>
                                     </div>
                                 </div>
-                                <div class="w-full sm:px-2 sm:py-2 sm:w-1/2 lg:w-4/12">
+                                <div class="w-full sm:px-2 sm:py-2 sm:w-1/2 lg:w-8/12">
                                     {{ meal.inventory_match }} / {{ meal.ingredient_count }} items in your inventory ({{ meal.match_percent ? meal.match_percent : 0 }}%) 
                                 </div>
                                 <div class="flex flex-col w-full sm:px-2" v-if="Object.keys(meal.missingItems).length > 0">
@@ -147,7 +167,7 @@
                                         <small>Missing Items</small> 
                                     </div>
                                     <div class="flex flex-col">
-                                        <div class="flex flex-col px-2 py-2 my-1 ml-2 bg-gray-100 sm:flex-wrap sm:flex-row gap-y-2 md:text-xs" 
+                                        <div class="flex flex-col px-2 py-2 my-1 ml-2 bg-gray-100 sm:flex-wrap sm:flex-row gap-y-2 sm:justify-between md:text-xs lg:w-3/4" 
                                             v-for="item of meal.missingItems" :key="item.id"
                                         >
 
@@ -188,13 +208,13 @@
                                                         Inventory
                                                     </span> 
                                                 </div>
-                                                <span class="hidden p-2 cursor-pointer sm:block text-default hover:font-bold" 
-                                                        v-on:click="data.expandMissing = {meal: 0, item: 0}"
-                                                         v-if="data.expandMissing.meal == meal.id && data.expandMissing.item == item.id"
-                                                >
-                                                    x
-                                                </span>
                                             </div>
+                                            <span class="hidden p-2 cursor-pointer sm:block text-default hover:font-bold" 
+                                                    v-on:click="data.expandMissing = {meal: 0, item: 0}"
+                                                        v-if="data.expandMissing.meal == meal.id && data.expandMissing.item == item.id"
+                                            >
+                                                x
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -250,15 +270,15 @@
                                     <div class="flex items-center gap-2">
                                         <span class="px-2 py-1 text-xs transition duration-200 bg-orange-200 rounded-lg cursor-pointer hover:bg-orange-300" title="Item bought - Add to inventory">+</span>
 
-                                        <span class="w-auto p-1 opacity-0 cursor-pointer group-hover:opacity-100 text-default hover:text-red-600"
-                                            v-on:click="data.deleteShoppingItem = item.id"
+                                        <span class="w-auto p-1 cursor-pointer group-hover:opacity-100 text-default" :class="data.deleteShoppingItem == item.id ? 'opacity-100' : 'opacity-0'"
+                                            v-on:click="data.deleteShoppingItem == item.id ? data.deleteShoppingItem = 0 : data.deleteShoppingItem = item.id"
                                         >
                                             x
 
-                                            <span class="hover:underline"
+                                            <span class="lowercase hover:underline hover:text-red-600"
                                                     v-if="item.id == data.deleteShoppingItem" 
                                                     v-on:click="removeFromList(item)">
-                                                Delete
+                                                delete
                                             </span>
                                         </span>
                                     </div>
@@ -269,7 +289,6 @@
                     </div>
                 </div>
             </div>
-
 
             <Modal :show="data.addingEntry" @close="closeModal">
                 <PlannerEntryForm :entry="data.entryData" @addedEntry="resetEntryForm()"></PlannerEntryForm>
@@ -338,6 +357,8 @@
         addTo: 0,
         fullCalendar: [],
         addingEntry: false,
+        generateListDays: "7",
+        confirmGenerate: false,
         entryData: {
             recipe_id: 0,
             meal_id: 0,
@@ -468,6 +489,17 @@
             preserveState: true
         });
     }
+
+
+    let generateList = () => {
+        router.post('/shopping-list/generate', {
+            days: data.generateListDays
+        }, {
+            preserveState: true
+        });
+
+        data.confirmGenerate = false;
+    };
 
 
     // SHOPPING LIST TAB
