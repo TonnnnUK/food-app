@@ -76,4 +76,8 @@ class User extends Authenticatable
                     ->withTimestamps();
     }
 
+    public function meal_tags()
+    {
+        return $this->hasMany(MealTag::class);
+    }
 }

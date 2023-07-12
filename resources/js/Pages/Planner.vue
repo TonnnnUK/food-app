@@ -30,26 +30,26 @@
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 " v-if="data.selectedContent == 'calendar'">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <div class="flex items-center justify-between mb-4">
-                            <div>
+                        <div class="flex flex-wrap items-center justify-between gap-4 mb-4 md:gap-0">
+                            <div class="w-full md:w-auto">
                                 <h3 class="text-lg">Your Planner</h3>
                             </div>
-                            <div class="flex items-center gap-2 mx-2 lg:text-xs">
-                                <span class="">Generate Shopping list for</span>
+                            <div class="flex flex-wrap items-center gap-2 mx-2 lg:text-xs">
+                                <span class="text-xs md:text-default">Generate Shopping list for</span>
                                 <div class="flex items-center gap-2">
                                     <TextInput class="w-12 text-xs" type="text" v-model="data.generateListDays" />
                                     <span>days</span>    
                                 </div>    
-                                <span class="px-3 py-1 transition duration-200 rounded-lg cursor-pointer"
-                                    :class="data.confirmGenerate ? 'bg-red-400 hover:bg-red-500' : 'bg-blue-100 hover:bg-blue-200'"
-                                    v-on:click="data.confirmGenerate = !data.confirmGenerate">
-                                    <span v-text="data.confirmGenerate ? 'x' : 'Generate'" />
-                                </span>
-                                <span class="px-3 py-1 transition duration-200 bg-green-200 rounded-lg cursor-pointer hover:underline"
+                                <span class="px-3 py-1 text-sm transition duration-200 bg-green-200 rounded-lg cursor-pointer hover:bg-green-300"
                                     v-if="data.confirmGenerate"
                                     v-on:click="generateList()"
                                 >
                                     Confirm
+                                </span>
+                                <span class="px-3 py-1 text-sm transition duration-200 rounded-lg cursor-pointer"
+                                    :class="data.confirmGenerate ? 'text-red-600 hover:underline hover:text-red-800' : 'bg-blue-100 hover:bg-blue-200'"
+                                    v-on:click="data.confirmGenerate = !data.confirmGenerate">
+                                    <span v-text="data.confirmGenerate ? 'x' : 'Generate'" />
                                 </span>
                             </div>
                             <div class="flex items-center gap 2">
@@ -263,7 +263,7 @@
 
                         <div class="flex flex-wrap justify-between my-4 text-sm">
                             <div class="flex flex-wrap items-center w-full p-2 my-1 group sm:w-[48%] bg-gray-50 border border-gray-200" v-for="item of shopping_list" :key="item.id">
-                                <div class="flex items-center justify-between w-full capitalize">
+                                <div class="flex items-center justify-between w-full capitalize select-none">
                                     <input type="checkbox" v-model="data.listBulkAdd">
                                     <span>{{ item.name }}</span>
 
@@ -290,6 +290,7 @@
                 </div>
             </div>
 
+            <!-- ENTRY MODAL -->
             <Modal :show="data.addingEntry" @close="closeModal">
                 <PlannerEntryForm :entry="data.entryData" @addedEntry="resetEntryForm()"></PlannerEntryForm>
             </Modal>

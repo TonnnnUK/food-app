@@ -16,11 +16,58 @@ class MealsController extends Controller
     
     public function index()
     {
-        $meals = Auth::user()->meals;
+        $user = Auth::user();
+        $meals = $user->meals;
+
+        if( request('tag')){
+
+
+            $tagId = request('tag');
+
+            $meals = Meal::where('user_id', $user->id)->whereHas('tags', function ($query) use ($tagId) {
+                $query->where('meal_tag_id', $tagId);
+            })->get();
+
+        }   
+
+        if( request('food_item')){
+            $slug = request('food_item');
+
+            $meals = $meals->filter( function($meal) use ($slug){ 
+                $matchingItems = $meal->ingredients->filter( function($ing) use ($slug){
+                    $matchingIngredient = false;
+                    if ($ing->slug == $slug){
+                        return $ing;
+                    }
+
+                });
+
+                if( count($matchingItems) > 0 ) {
+                    return $meal;
+                } else {
+                    return false;
+                }
+            });
+
+        }   
+        
+        
         $sorted = $meals->sortBy('name')->values();
+        $tags = $user->meal_tags;
+
+        $food_item_tags = [];
+        $food_item_tags['chicken-breast'] = 'Chicken Breast';
+        $food_item_tags['chicken-thighs'] = 'Chicken Thighs';
+        $food_item_tags['sirloin-steak'] = 'Sirloin Steak';
+        $food_item_tags['pork-steaks'] = 'Pork Steaks';
+        $food_item_tags['diced-beef'] = 'Diced Beef';
+
+
 
         return Inertia::render('Meals')->with([
-            'meals' => $sorted
+            'meals' => $sorted,
+            'tags' => $tags,
+            'food_item_tags' => $food_item_tags,
         ]);
         
     }
@@ -125,7 +172,7 @@ class MealsController extends Controller
         $shoppingListItems = Auth::user()->shopping_list->pluck('id')->toArray();
         $allItems = array_merge($inventoryItems, $shoppingListItems);    
         $items = $mealItems->filter( function ($item) use ($allItems) {
-            if( in_array($item, $allItems) ){
+            if( !in_array($item, $allItems) ){
                 return $item;
             }
         });

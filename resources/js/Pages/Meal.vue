@@ -98,7 +98,7 @@
                                                 <th scope="col" class="px-6 py-4">Qty</th>
                                                 <th scope="col" class="flex justify-end">
                                                     <button class="px-3 py-2 transition duration-200 bg-yellow-200 rounded-lg hover:bg-yellow-300"
-                                                            v-on:click="addToList()"
+                                                            v-on:click="addAllToList()"
                                                     >
                                                         Add all to shopping list
                                                     </button>
@@ -257,7 +257,7 @@
         data.makeDuplicate = false;
     }
         
-    let addToList = (item ) => {
+    let addAllToList = (item ) => {
         router.post(`/meal/${data.mealID}/add-to-shopping-list`, {
             preserveState: true
         });

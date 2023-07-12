@@ -45,6 +45,8 @@ class PlannerController extends Controller
             
             if( count($inventory) != 0 && $meal->inventory_match != 0){
                 $meal->match_percent = number_format($meal->inventory_match / count($ingredientIds) * 100);
+            } else {
+                $meal->match_percent = 0;
             }
             
 
@@ -55,7 +57,6 @@ class PlannerController extends Controller
             $meal->missingItems = $filteredIngredients;
         
         });
-
         
         $sortedMeals = $meals->sortByDesc('match_percent')->values();
 
@@ -156,6 +157,7 @@ class PlannerController extends Controller
 
     public function addToList(FoodItem $fooditem)
     {
+        
         Auth::user()->shopping_list()->attach($fooditem->id);
 
         return redirect('/planner');
