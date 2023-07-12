@@ -174,7 +174,8 @@
             }
             
             router.get(`/meal/${data.mealID}`, { search: value}, {
-                preserveState: true
+                preserveState: true,
+                preserveScroll: true
             });
     
         }, 300) );
@@ -212,7 +213,8 @@
 
         if( Object.keys(data.errors).length == 0 ){
             newIngredient.post(`/meal/${data.mealID}`, { ingredient: data.newIngredient}, {
-                preserveState: true
+                preserveState: true,
+                preserveScroll: true
             });
 
             newIngredient.id = 0;            
@@ -239,19 +241,22 @@
     let removeIngredient = (ingredient) => {
 
         router.post(`/meal/${data.mealID}/remove/${ingredient.id}`, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
     }
 
     let saveTitle = () => {
         router.post(`/meal/${data.mealID}/save-title`, { newTitle: router.page.props.meal.name } , {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
     }
 
     let duplicateRecipe = () => {
         router.post(`/meal/${data.mealID}/duplicate`, {
-            preserveState: true
+            preserveState: true,
+preserveScroll: true
         });
 
         data.makeDuplicate = false;
@@ -259,7 +264,8 @@
         
     let addAllToList = (item ) => {
         router.post(`/meal/${data.mealID}/add-to-shopping-list`, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
     }
 

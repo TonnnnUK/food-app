@@ -415,7 +415,8 @@
         router.get('/planner', { 
             month: month+1, 
         }, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
 
     };
@@ -464,7 +465,8 @@
     let deleteEntry = ( entry ) => {
         
         router.delete(`/entry/${entry.id}`, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
 
         
@@ -472,7 +474,8 @@
 
     let addToList = (item ) => {
         router.post(`/shopping-list/add/${item.id}`, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
     }
 
@@ -487,7 +490,8 @@
 
     let removeFromList = ( item ) => {
         router.post(`/shopping-list/remove/${item.shopping_list_id}`, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
     }
 
@@ -496,7 +500,8 @@
         router.post('/shopping-list/generate', {
             days: data.generateListDays
         }, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
 
         data.confirmGenerate = false;
@@ -522,7 +527,8 @@
             }
             
             router.get(`/planner`, { search: value }, {
-                preserveState: true
+                preserveState: true,
+                preserveScroll: true
             });
     
         }, 300) );
@@ -532,7 +538,8 @@
 
     let selectFoodItem = (item) => {
         router.post(`shopping-list/add/${item.id}`, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
 
         search = '';

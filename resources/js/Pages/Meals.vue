@@ -113,11 +113,13 @@ import TagButton from '@/Components/TagButton.vue';
         if( Number.isInteger(slug) ){
             console.log('selected tag is number', slug)
             router.get('/meals', { tag: slug }, {
-                preserveState: true
+                preserveState: true,
+                preserveScroll: true
             });
         } else {
             router.get('/meals', { food_item: slug }, {
-                preserveState: true
+                preserveState: true,
+                preserveScroll: true
             });
         }
     }

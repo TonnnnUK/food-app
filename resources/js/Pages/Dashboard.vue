@@ -162,7 +162,8 @@ let data = reactive({
 let handleLeftovers = (entry) => {
     data.leftovers.entry = entry; 
     router.post(`/dashboard/leftovers`, data.leftovers, {
-        preserveState: true
+        preserveState: true,
+        preserveScroll: true
     });
     
 };
@@ -173,7 +174,8 @@ let completeMeal = (entry) => {
     router.post(`/dashboard/${entry.id}/complete`, { 
             removeItems: data.itemsToRemove
         }, {
-        preserveState: true
+        preserveState: true,
+        preserveScroll: true
     });
 };
 

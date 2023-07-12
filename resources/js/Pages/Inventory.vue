@@ -235,7 +235,8 @@
     watch( search, debounce( function(value){
         
         router.get('/inventory', { search: value }, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
 
     }, 300) );
@@ -243,14 +244,16 @@
 
     let selectFoodType = (type_id) => {
         router.get('/inventory', { type: type_id }, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
     };
 
 
     let resetItems = () => {
         router.get('/inventory', '', {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
     }
     //////////////////////////
@@ -270,7 +273,8 @@
                 items: selectedItems['_rawValue'],
                 location: data.addTo,
             }, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
 
         selectedItems = ref([]);
@@ -288,7 +292,8 @@
             'type': type,
             'id': id
         },{ 
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
 
     }
