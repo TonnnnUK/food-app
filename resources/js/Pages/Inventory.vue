@@ -111,9 +111,11 @@
                                         <div class="order-3 w-full px-2 md:w-1/4">
                                             {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
                                         </div>
-                                        <div class="order-2 w-1/2 px-2 md:w-1/4">Move</div>
+                                        <div class="order-2 w-1/2 px-2 md:w-1/4">
+                                            <!-- Move -->
+                                        </div>
                                         <div class="flex justify-end w-1/2 gap-4 px-2 md:w-1/4">
-                                            <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
+                                            <!-- <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link> -->
                                             <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem('recipe', item.pivot.id)">X</span>
                                         </div>
                                         <div class="w-full px-2 mt-2">
@@ -130,9 +132,13 @@
                                         <div class="w-full px-2 md:w-1/4 ">
                                             {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
                                         </div>
-                                        <div class="w-1/2 px-2 md:w-1/4">Move</div>
+                                        <div class="w-1/2 px-2 md:w-1/4">
+                                            <!-- TO DO
+                                                Move item location
+                                            -->
+                                        </div>
                                         <div class="flex justify-end w-1/2 gap-4 px-2 md:w-1/4">
-                                            <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
+                                            <!-- <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link> -->
                                             <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem('meal', item.pivot.id)">X</span>
                                         </div>
                                         <div class="w-full px-2 mt-2">
@@ -147,9 +153,13 @@
                                             <span class="capitalize">{{ item.name }}</span>
                                         </div>
                                         <div class="w-full px-2 md:w-1/4 grow-1">{{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}</div>
-                                        <div class="w-1/2 px-2 md:w-1/4 grow-1">Move</div>
+                                        <div class="w-1/2 px-2 md:w-1/4 grow-1">
+                                            <!-- TO DO
+                                                Move item location
+                                            -->
+                                        </div>
                                         <div class="flex justify-end w-1/2 gap-4 px-2 md:w-1/4 grow-1">
-                                            <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link>
+                                            <!-- <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link> -->
                                             <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeItem('item', item.pivot.id)">X</span>
                                         </div>
                                         <div class="w-full px-2 mt-2 text-xs grow-1">
