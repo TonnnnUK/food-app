@@ -37,9 +37,9 @@
 
                     <div class="flex flex-wrap items-center w-full mb-4 gap-y-2 md:gap-x-2 md:w-auto">
                     
-                            <div class="w-1/2 sm:w-1/3 md:w-auto" 
+                            <div class="w-1/2 sm:w-auto" 
                                 v-for="location of locations" :key="location.id">
-                                <span class="block text-center whitespace-nowrap w-[95%] px-3 py-2 text-sm transition duration-200 border rounded-full cursor-pointer select-none" 
+                                <span class="block text-center whitespace-nowrap w-[95%] sm:w-auto px-3 py-2 text-sm md:px-4 lg:px-6 transition duration-200 border rounded-full cursor-pointer select-none" 
                                     :class="location.id == data.addTo ? 'bg-green-100 border-green-300' : 'bg-white hover:bg-green-50 border-gray-300'"
                                     v-on:click="selectLocation(location.id)">
                                     {{location.name}}
