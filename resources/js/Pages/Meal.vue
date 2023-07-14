@@ -222,9 +222,11 @@
         data.selectedFoodType = type
         router.get(`/meal/${props.meal.id}`, { type: type.id }, {
             preserveState: true,
-            preserveScroll: true
-        }).on('success', (event) => {
-            data.isSearching = true;
+            preserveScroll: true,
+
+            onSuccess: (page) => {
+                data.isSearching = true;
+            }
         });
     };
 
@@ -301,9 +303,11 @@
     let duplicateRecipe = () => {
         router.post(`/meal/${data.mealID}/duplicate`, {
             preserveState: true,
-            preserveScroll: true
-        }).on('success', (event) => {
-            data.makeDuplicate = false;
+            preserveScroll: true,
+
+            onSuccess: (page) => {
+                data.makeDuplicate = false;
+            }
         });
 
     }

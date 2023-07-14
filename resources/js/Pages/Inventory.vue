@@ -284,9 +284,11 @@
                 location: data.addTo,
             }, {
             preserveState: true,
-            preserveScroll: true
-        }).on('sucess', (event) => {
-            selectedItems = ref([]);
+            preserveScroll: true,
+
+            onSuccess: (page) => {
+                selectedItems = ref([]);
+            }
         });
 
 

@@ -522,9 +522,10 @@
             days: data.generateListDays
         }, {
             preserveState: true,
-            preserveScroll: true
-        }).on('success', (event) => {
-            data.confirmGenerate = false;
+            preserveScroll: true,
+            onSuccess: (page) => {
+                data.confirmGenerate = false;
+            }
         });
 
     };
@@ -561,9 +562,10 @@
     let selectFoodItem = (item) => {
         router.post(`shopping-list/add/${item.id}`, {
             preserveState: true,
-            preserveScroll: true
-        }).on('success', (event) => {
-            search = '';
+            preserveScroll: true,
+            onSuccess: (page) => {
+                search = '';
+            }
         });
 
     };
