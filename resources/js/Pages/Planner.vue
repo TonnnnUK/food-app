@@ -186,14 +186,14 @@
 
                                             <div class="inline-flex flex-wrap items-center sm:flex-row sm:items-center gap-x-2 gap-y-2 sm:w-auto" v-if="data.expandMissing.meal == meal.id && data.expandMissing.item == item.id">
                                                 <small class="w-full sm:w-auto">Add to</small> 
-                                                <div>
+                                                <div v-if="!data.openAddToInventory">
                                                     <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-gray-200 rounded-full select-none"
                                                         v-if="shopping_list_ids.includes(item.id)"
                                                     >
                                                         In shopping list
                                                     </span>
                                                 </div>
-                                                <div>
+                                                <div v-if="!data.openAddToInventory">
                                                     <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-blue-100 rounded-full cursor-pointer select-none hover:bg-blue-200"
                                                         v-on:click="addToList(item)"
                                                         v-if="!shopping_list_ids.includes(item.id)"
@@ -201,16 +201,28 @@
                                                         Shopping list
                                                     </span> 
                                                 </div>
-                                                <div>
+                                                <div class="flex items-center gap-2">
                                                     <span class="inline-block px-4 py-1 text-sm transition duration-200 bg-orange-100 rounded-full cursor-pointer select-none hover:bg-orange-200"
-                                                        v-on:click="addToList(item)"
+                                                        v-on:click="data.openAddToInventory = item.id; data.addToLocation = 0"
                                                     >
                                                         Inventory
                                                     </span> 
+
+                                                    <div class="flex" v-if="data.openAddToInventory == item.id">
+                                                        <SelectInput class="md:text-sm" v-model="data.addToLocation">
+                                                            <option value="0">--Select Location--</option>
+                                                            <option v-for="location of locations" :key="location.id">
+                                                                {{ location.name }}
+                                                            </option>
+                                                        </SelectInput>
+                                                        <FormButton v-on:click="addToInventory(item)">
+                                                            Add
+                                                        </FormButton>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <span class="hidden p-2 cursor-pointer sm:block text-default hover:font-bold" 
-                                                    v-on:click="data.expandMissing = {meal: 0, item: 0}"
+                                                    v-on:click="data.expandMissing = {meal: 0, item: 0}; data.openAddToInventory = false"
                                                         v-if="data.expandMissing.meal == meal.id && data.expandMissing.item == item.id"
                                             >
                                                 x
@@ -264,11 +276,10 @@
                         <div class="flex flex-wrap justify-between my-4 text-sm">
                             <div class="flex flex-wrap items-center w-full p-2 my-1 group sm:w-[48%] bg-gray-50 border border-gray-200" v-for="item of shopping_list" :key="item.id">
                                 <div class="flex items-center justify-between w-full capitalize select-none">
-                                    <input type="checkbox" v-model="data.listBulkAdd">
+                                    <!-- <input type="checkbox" v-model="data.listBulkAdd"> -->
                                     <span>{{ item.name }}</span>
 
                                     <div class="flex items-center gap-2">
-                                        <span class="px-2 py-1 text-xs transition duration-200 bg-orange-200 rounded-lg cursor-pointer hover:bg-orange-300" title="Item bought - Add to inventory">+</span>
 
                                         <span class="w-auto p-1 cursor-pointer group-hover:opacity-100 text-default" :class="data.deleteShoppingItem == item.id ? 'opacity-100' : 'opacity-0'"
                                             v-on:click="data.deleteShoppingItem == item.id ? data.deleteShoppingItem = 0 : data.deleteShoppingItem = item.id"
@@ -312,6 +323,8 @@
     import PlannerEntryForm from '@/Components/PlannerEntryForm.vue';
     import debounce from "lodash/debounce";
     import TextInput from '@/Components/TextInput.vue';
+    import FormButton from '@/Components/FormButton.vue';
+    import SelectInput from '@/Components/SelectInput.vue';
 
     const props = defineProps({
         'recipes': Object,
@@ -321,7 +334,8 @@
         'entries': Object,
         'shopping_list': Object,
         'shopping_list_ids': Array,
-        'foodItems': Object
+        'foodItems': Object,
+        'locations': Object,
     });
 
     let data = reactive({
@@ -472,8 +486,15 @@
         
     }
 
-    let addToList = (item ) => {
+    let addToList = ( item ) => {
         router.post(`/shopping-list/add/${item.id}`, {
+            preserveState: true,
+            preserveScroll: true
+        });
+    }
+
+    let addToInventory = ( item ) => {
+        router.post(`/inventory/add/${item.id}`, {
             preserveState: true,
             preserveScroll: true
         });
@@ -502,9 +523,10 @@
         }, {
             preserveState: true,
             preserveScroll: true
+        }).on('success', (event) => {
+            data.confirmGenerate = false;
         });
 
-        data.confirmGenerate = false;
     };
 
 
@@ -540,9 +562,10 @@
         router.post(`shopping-list/add/${item.id}`, {
             preserveState: true,
             preserveScroll: true
+        }).on('success', (event) => {
+            search = '';
         });
 
-        search = '';
     };
 
 </script>

@@ -60,7 +60,11 @@ class DashboardController extends Controller
         $entry->save();
 
         foreach( request('removeItems') as $id ){
-            UserFoodItem::where('food_item_id', $id)->first()->delete();
+            $item = UserFoodItem::where('food_item_id', $id)->first();
+            
+            if($item){
+                $item->delete();
+            }
         }
         
         return redirect('/dashboard');

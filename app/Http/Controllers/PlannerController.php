@@ -76,6 +76,8 @@ class PlannerController extends Controller
             $foodItems = FoodItem::where('name', 'LIKE', "%$search%")->get();
         }
 
+        $locations = $user->locations;
+
         return Inertia::render('Planner')->with([
             'recipes' => $recipes,
             'meals' => $sortedMeals,
@@ -84,7 +86,8 @@ class PlannerController extends Controller
             'entries' => $entries,
             'shopping_list' => $shopping_list,
             'shopping_list_ids' => $shopping_list_ids,
-            'foodItems' => isset($foodItems) ? $foodItems : null
+            'foodItems' => isset($foodItems) ? $foodItems : null,
+            'locations' => $locations,
         ]);
     }
 

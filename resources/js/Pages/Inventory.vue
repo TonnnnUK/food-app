@@ -67,7 +67,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="relative flex flex-wrap mt-4 md:mt-2 gap-y-2 sm:gap-y-0">
+                <div class="relative flex flex-wrap mt-4 md:mt-2 gap-y-2 sm:gap-y-0 max-h-[120px] md:max-h-[200px] overflow-auto bg-white">
                     <span v-if="foodItems && Object.keys(foodItems).length > 0" class="absolute p-2 cursor-pointer right-4" v-on:click="resetItems()">x</span>
                     <div v-for="item of foodItems" :key="item.id" class="flex items-center w-full sm:w-1/2 lg:w-1/3">
                         <label class="flex items-center gap-2 p-1 mb-1 text-lg capitalize border border-gray-100 cursor-pointer hover:border-gray-400 md:text-sm">
@@ -285,9 +285,10 @@
             }, {
             preserveState: true,
             preserveScroll: true
+        }).on('sucess', (event) => {
+            selectedItems = ref([]);
         });
 
-        selectedItems = ref([]);
 
     }
     //////////////////////////

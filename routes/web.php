@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\MealsController;
+use App\Http\Controllers\ActionController;
 use App\Http\Controllers\PlannerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WorkoutController;
@@ -55,11 +56,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/inventory',  [InventoryController::class, 'addLocation'])->name('add-inventory-locations');
     Route::post('/inventory/add-items',  [InventoryController::class, 'addFoodItems'])->name('add-food-items');
     Route::post('/inventory/remove',  [InventoryController::class, 'removeFoodItem'])->name('remove-inventory-item');
-    Route::get('/inventory/{id}/meals',  [MealsController::class, 'mealsByItem'])->name('meals-by-item'); // TODO: 
 
+
+    Route::get('/inventory/{id}/meals',  [MealsController::class, 'mealsByItem'])->name('meals-by-item'); // TODO: 
     Route::get('/meals', [MealsController::class, 'index'])->name('meals');
     Route::post('/meals', [MealsController::class, 'save'])->name('add-meal');
-
     Route::get('/meal/{meal}', [MealsController::class, 'show'])->name('meal-info');
     Route::post('/meal/{meal}', [MealsController::class, 'addIngredient'])->name('add-ingredient');
     Route::post('/meal/{meal}/save-title', [MealsController::class, 'saveTitle'])->name('save-meal-title');
@@ -74,6 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::post('shopping-list/add/{fooditem}', [PlannerController::class, 'addToList'])->name('add-to-shopping-list');
     Route::post('shopping-list/remove/{id}', [PlannerController::class, 'removeFromList'])->name('remove-from-shopping-list');
     Route::post('shopping-list/generate', [PlannerController::class, 'generateList'])->name('generate-shopping-list');
+
 
 });
 

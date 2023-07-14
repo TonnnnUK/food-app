@@ -127,7 +127,8 @@
         validateData(); 
 
         router.post(`/entry/add`, { entry: props.entry}, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
 
         emit('addedEntry');

@@ -47,38 +47,71 @@
                         </div>
 
                         <div class="my-4">
-                            <div class="flex flex-col gap-2 md:items-center md:flex-row">
+                            <div class="flex flex-col gap-2 md:items-center md:flex-row md:flex-wrap">
 
-                                <div class="inline-flex flex-col gap-2 md:flex-row">
-                                    <div class="flex flex-col gap-2 sm:items-center sm:flex-row">
-                                        <label class="block pl-2 text-sm sm:w-[20%] sm:text-right md:w-full">Add ingredient</label>
-                                        <TextInput class="sm:w-[75%]" type="text" placeholder="Search ingredients..." v-model="search"  />
+                                <label class="block pl-2 text-sm sm:w-[20%] md:w-full">Add ingredient</label>
+                                <div class="inline-flex flex-col gap-2">
+                                    
+                                    <!-- FOOD ITEM SEARCH -->
+                                    <div class="flex flex-col flex-wrap w-full gap-2 sm:items-center sm:flex-row md:flex-wrap overflow-auto max-h-[150px] md:max-h-full md:overflow-y-hidden"
+                                            v-if="data.selectedFoodType == false"
+                                    >
+                                        <div class=""
+                                            v-for="food_type of foodTypes" :key="food_type.id"
+                                        >
+                                            <span class="w-[95%] md:w-auto block px-2 py-2 text-sm capitalize transition duration-200 border rounded-lg select-none md:w-auto md:px-4 hover:cursor-pointer hover:bg-orange-100 hover:border-orange-300 bg-blue-100 border-blue-300"
+                                                v-on:click="selectFoodType(food_type)"
+                                            >
+                                                {{food_type.name}}
+                                            </span>
+
+                                        </div>
+
                                     </div>
-                                    <div class="flex flex-col gap-2 sm:items-center sm:flex-row">
-                                        <label class="block pl-2 text-sm sm:w-[20%] sm:text-right">Unit</label>
-                                        <SelectInput class="sm:w-[75%]" v-model="newIngredient.unitID">
-                                            <option v-for="unit of units" :key="unit.id" :value="unit.id">{{unit.name}}</option>
-                                        </SelectInput>
+                                    
+                                    <div class="flex" v-if="data.selectedFoodType != false">
+                                        <span class="w-[95%] sm:w-auto block px-2 py-2 text-sm capitalize transition duration-200 border rounded-lg select-none md:w-auto md:px-4 bg-orange-100 border-orange-300">
+                                            {{ data.selectedFoodType.name }}
+                                        </span>
+
+                                        <span v-on:click="data.selectedFoodType = false" class="p-2 cursor-pointer">x</span>
                                     </div>
 
-                                    <div class="flex flex-col gap-2 sm:items-center sm:flex-row">
-                                        <label class="block pl-2 text-sm sm:w-[20%] sm:text-right">Qty</label>
-                                        <TextInput class="sm:w-[75%]" type="text" placeholder="Enter qty..." v-model="newIngredient.qty"  />
+                                    <div class="flex flex-wrap gap-2 my-2 md:my-4" v-if="data.isSearching">
+                                        <FoodItemPill v-for="item of foodItems" :key="item.id" :item="item.name" v-on:click="selectFoodItem(item)" />   
                                     </div>
-                                </div>
-                                <div class="flex items-end w-full md:w-auto">
-                                    <div class="flex flex-col">
-                                        <PrimaryButton class="bg-blue-500 rounded-lg hover:bg-blue-600" v-on:click="addToMeal()">Add to meal</PrimaryButton>
+                                    
+                                    <div class="flex flex-col gap-2 my-4" v-if="data.selectedFoodType != false">
+
+                                        <div class="flex flex-col gap-2 sm:items-center sm:flex-row">
+                                            <label class="block pl-2 text-sm sm:w-[20%] sm:text-right">Item</label>
+                                            <FoodItemPill :item="search" v-on:click="search = ''; console.log('clear item')" />   
+                                        </div>
+
+                                        <div class="flex flex-col gap-2 sm:items-center sm:flex-row">
+                                            <label class="block pl-2 text-sm sm:w-[20%] sm:text-right">Unit</label>
+                                            <SelectInput class="sm:w-[75%]" v-model="newIngredient.unitID">
+                                                <option v-for="unit of units" :key="unit.id" :value="unit.id">{{unit.name}}</option>
+                                            </SelectInput>
+                                        </div>
+
+                                        <div class="flex flex-col gap-2 sm:items-center sm:flex-row">
+                                            <label class="block pl-2 text-sm sm:w-[20%] sm:text-right">Qty</label>
+                                            <TextInput class="sm:w-[75%]" type="text" placeholder="Enter qty..." v-model="newIngredient.qty"  />
+                                        </div>
+
+                                        <div class="flex items-end w-full md:w-auto">
+                                            <div class="flex flex-col">
+                                                <PrimaryButton class="bg-blue-500 rounded-lg hover:bg-blue-600" v-on:click="addToMeal()">Add to meal</PrimaryButton>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
                             
                             </div>
 
-                            <div class="flex flex-wrap gap-2 my-2 md:my-4" v-if="data.isSearching">
-                                <FoodItemPill v-for="item of foodItems" :key="item.id" :item="item.name" v-on:click="selectFoodItem(item)" />   
-                            </div>
-
+                            
                             <div class="my-4" v-if="Object.keys(data.errors).length > 0">
                                 <span class="block text-xs text-red-600" v-for="error in Object.keys(data.errors)" :key="error">
                                     {{ data.errors[error] }}
@@ -139,11 +172,12 @@
     import FoodItemPill from '@/Components/FoodItemPill.vue';
     import PrimaryButton from '@/Components/PrimaryButton.vue';
 
-    defineProps({
+    const props = defineProps({
         'meal': Object,
         'ingredients': Object,
         'units': Object,
-        'foodItems': Object
+        'foodItems': Object,
+        'foodTypes': Object,
     });
 
     
@@ -153,7 +187,8 @@
         searchItems: [],
         errors: [],
         editingName: false,
-        makeDuplicate: false
+        makeDuplicate: false,
+        selectedFoodType: false
     });
 
 
@@ -182,6 +217,16 @@
     }
 
     watchSearch();
+    
+    let selectFoodType = (type) => {
+        data.selectedFoodType = type
+        router.get(`/meal/${props.meal.id}`, { type: type.id }, {
+            preserveState: true,
+            preserveScroll: true
+        }).on('success', (event) => {
+            data.isSearching = true;
+        });
+    };
 
     //////////////////////////
     // FOOD SEARCH END //
@@ -256,10 +301,11 @@
     let duplicateRecipe = () => {
         router.post(`/meal/${data.mealID}/duplicate`, {
             preserveState: true,
-preserveScroll: true
+            preserveScroll: true
+        }).on('success', (event) => {
+            data.makeDuplicate = false;
         });
 
-        data.makeDuplicate = false;
     }
         
     let addAllToList = (item ) => {

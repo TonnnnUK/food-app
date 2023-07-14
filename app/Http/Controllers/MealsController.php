@@ -6,6 +6,7 @@ use App\Models\Meal;
 use App\Models\Unit;
 use Inertia\Inertia;
 use App\Models\FoodItem;
+use App\Models\FoodType;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,9 +59,10 @@ class MealsController extends Controller
         $food_item_tags = [];
         $food_item_tags['chicken-breast'] = 'Chicken Breast';
         $food_item_tags['chicken-thighs'] = 'Chicken Thighs';
-        $food_item_tags['sirloin-steak'] = 'Sirloin Steak';
+        $food_item_tags['mince-beef'] = 'Mince Beef';
         $food_item_tags['pork-steaks'] = 'Pork Steaks';
         $food_item_tags['diced-beef'] = 'Diced Beef';
+        $food_item_tags['sirloin-steak'] = 'Sirloin Steak';
 
 
 
@@ -76,16 +78,23 @@ class MealsController extends Controller
     {
 
         $units = Unit::all();
+        $food_types = FoodType::all();
 
         if( request()->search){
             $search = request()->search;
             $foodItems = FoodItem::where('name', 'LIKE', "%$search%")->get();
         }
+        
+        if( request()->type){
+            $foodItems = FoodItem::where('food_type_id', request()->type)->get();
+        }
+
 
         return Inertia::render('Meal')->with([
             'meal' => $meal,
             'units' => $units,
             'foodItems' => isset($foodItems) ? $foodItems : null,
+            'foodTypes' => $food_types,
         ]);
         
     }
