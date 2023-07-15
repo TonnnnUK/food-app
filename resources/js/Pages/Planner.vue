@@ -208,15 +208,16 @@
                                                         Inventory
                                                     </span> 
 
-                                                    <div class="flex" v-if="data.openAddToInventory == item.id">
+                                                    <div class="flex gap-2" v-if="data.openAddToInventory == item.id">
                                                         <SelectInput class="md:text-sm" v-model="data.addToLocation">
                                                             <option value="0">--Select Location--</option>
-                                                            <option v-for="location of locations" :key="location.id">
+                                                            <option v-for="location of locations" :value="location.id" :key="location.id">
                                                                 {{ location.name }}
                                                             </option>
                                                         </SelectInput>
-                                                        <FormButton v-on:click="addToInventory(item)">
-                                                            Add
+                                                        <FormButton class="bg-blue-200 hover:bg-blue-300" 
+                                                            v-on:click="addToInventory(item)">
+                                                           Add
                                                         </FormButton>
                                                     </div>
                                                 </div>
@@ -494,7 +495,11 @@
     }
 
     let addToInventory = ( item ) => {
-        router.post(`/inventory/add/${item.id}`, {
+        router.post(`/inventory/add`, {
+            item: item,
+            location: data.addToLocation
+        },
+        {
             preserveState: true,
             preserveScroll: true
         });

@@ -115,6 +115,20 @@ class InventoryController extends Controller
 
         return redirect('/inventory');
     }
+
+    public function addSingleFoodItem(){
+        $foodID = request()->item['id'];
+        $locationID = request()->location;
+        $dt = new Carbon();
+
+        Auth::user()->food_items()->attach([$foodID], [
+            'location_id' => $locationID,
+            'date_in' => $dt
+        ]);
+
+        
+        return redirect('/planner');
+    }
     
     public function removeFoodItem()
     {   

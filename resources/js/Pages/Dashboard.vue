@@ -81,7 +81,7 @@
 
                         <div class="w-full p-4 m-2 text-xs bg-white border-b rounded-lg dark:border-neutral-500" 
                             v-if="Object.keys(meal_entries).length == 0 ">
-                            There's nothing planned, better get your arse in gear!
+                            There's nothing planned for today, what's in the cupboards?
                         </div>
                     
                     </div>
@@ -107,7 +107,7 @@
 
                         <div class="w-full p-4 m-2 text-xs bg-white border-b rounded-lg dark:border-neutral-500" 
                             v-if="Object.keys(workout_entries).length == 0 ">
-                            There's nothing planned, better get your arse in gear!
+                            There's nothing planned for today, better get your arse in gear!
                         </div>
 
 
