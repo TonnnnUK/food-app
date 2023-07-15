@@ -79,16 +79,10 @@ class MealsController extends Controller
 
         $units = Unit::all();
         $food_types = FoodType::all();
-
-        if( request()->search){
-            $search = request()->search;
-            $foodItems = FoodItem::where('name', 'LIKE', "%$search%")->get();
-        }
         
         if( request()->type){
-            $foodItems = FoodItem::where('food_type_id', request()->type)->get();
+            $foodItems = FoodItem::where('food_type_id', request()->type)->orderBy('name')->get();
         }
-
 
         return Inertia::render('Meal')->with([
             'meal' => $meal,
