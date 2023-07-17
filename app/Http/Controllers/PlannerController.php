@@ -115,6 +115,9 @@ class PlannerController extends Controller
                 $recipe = Recipe::find($data['recipe_id']);
                 $name = $recipe->name;
                 break;
+            case 'Note';
+                $name = 'Note';
+                break;
         }
 
         $data['entry_data']['name'] = $name;
