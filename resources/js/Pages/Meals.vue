@@ -33,7 +33,7 @@
                         <div class="flex items-center justify-between mb-2 md:mb-4">
                            <h2 class="text-xl font-bold">Your meals</h2>
                             <SmallButton class="bg-gray-300 hover:bg-gray-400 focus:ring-gray-400"
-                                v-on:click="filters.show = !filters.show"    
+                                v-on:click="toggleFilters()"    
                             >
                                 {{ filters.show ? 'x' : 'Filters' }}
                             </SmallButton>
@@ -123,4 +123,14 @@ import TagButton from '@/Components/TagButton.vue';
             });
         }
     }
+
+    let toggleFilters = () => {
+        filters.show = !filters.show
+        if( filters.show == false ){
+            router.get('/meals', {}, {
+                preserveState: true,
+                preserveScroll: true
+            });
+        }
+    };
 </script>

@@ -145,7 +145,40 @@
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 " v-if="data.selectedContent == 'meals'">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <h3 class="text-lg">Your meals</h3>
+                        <div class="flex items-center justify-between my-2">
+                            <h3 class="text-lg">Your meals</h3>
+                            <SmallButton class="bg-gray-300 hover:bg-gray-400 focus:ring-gray-400"
+                                v-on:click="toggleFilters()"    
+                            >
+                                {{ filters.show ? 'x' : 'Filters' }}
+                            </SmallButton>
+                        </div>
+
+                        <div class="flex flex-col my-2 md:my-4" v-if="filters.show">
+                            <span class="my-2 font-bold md:text-xs lg:my-4">Filter by</span>
+
+                            <div class="flex items-center gap-2 mb-2">
+                                <label class="text-xs">Tags:</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <TagButton v-for="tag of tags" :key="tag.id"
+                                        v-on:click="selectTag(tag.id)"
+                                    >
+                                        {{ tag.tag_name }}
+                                    </TagButton>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label class="text-xs">Ingredient:</label>
+                                 <div class="flex flex-wrap gap-2">
+                                    <TagButton v-for="(tag, index) of food_item_tags" :key="tag"
+                                        :class="filters.selectedFoodItem == index ? 'bg-orange-100 text-orange-600 border-orange-300 hover:bg-orange-100 hover:border-orange-300 ring-orange-300' : ''"  
+                                        v-on:click="selectTag(index)"
+                                    >
+                                        {{ tag }}
+                                    </TagButton>
+                                 </div>
+                            </div>
+                        </div>
                         
                         <div class="hidden w-full border-b lg:flex dark:border-neutral-500">
                             <div class="w-1/3 px-6 py-4">Meal</div>
@@ -304,7 +337,7 @@
 
             <!-- ENTRY MODAL -->
             <Modal :show="data.addingEntry" @close="closeModal">
-                <PlannerEntryForm :entry="data.entryData" @addedEntry="resetEntryForm()"></PlannerEntryForm>
+                <PlannerEntryForm :entry="data.entryData" :filters="props.filters" @addedEntry="resetEntryForm()" @filteredMeals="updateMealsForModal(meals)"></PlannerEntryForm>
             </Modal>
 
 
@@ -325,6 +358,8 @@
     import debounce from "lodash/debounce";
     import TextInput from '@/Components/TextInput.vue';
     import FormButton from '@/Components/FormButton.vue';
+    import SmallButton from '@/Components/SmallButton.vue';
+    import TagButton from '@/Components/TagButton.vue';
     import SelectInput from '@/Components/SelectInput.vue';
 
     const props = defineProps({
@@ -335,8 +370,11 @@
         'entries': Object,
         'shopping_list': Object,
         'shopping_list_ids': Array,
+        'filters': Object,
         'foodItems': Object,
         'locations': Object,
+        'tags': Object,
+        'food_item_tags': Object,
     });
 
     let data = reactive({
@@ -392,6 +430,7 @@
                 meals: props.meals,
                 workouts: props.workouts,
                 custom_workouts: props.custom_workouts,
+                filter: props.filters
             },
             selected: {
                 day: 0,
@@ -413,6 +452,7 @@
 
     }
 
+    // CALENDAR
     let dt = new Date();
     let today = dt.getDate();
     let thisMonth = dt.getMonth();
@@ -468,12 +508,17 @@
         data.entryData.custom_workout_id = 0;
         data.entryData.date_time = 0;
         data.entryData.entry_type = 0;
+        data.entryData.options.meals = props.meals;
         data.entryData.entry_data = {                
             name: '',
             notes: '',
         };
-
+        
         data.addingEntry = false;
+        router.get('/planner', {
+            preserveState: true,
+            preserveScroll: true
+        });
     };
 
     
@@ -487,6 +532,58 @@
         
     }
 
+    let updateMealsForModal = ( meals ) => {
+        console.log('updateMealsForModal', meals);
+        data.entryData.options.meals = meals;
+    }
+    // END CALENDAR
+
+
+    // MEALS
+    let filters = reactive({
+        show: false,
+        selectedFoodItem: false,
+        selectedTag: false,
+    });
+
+    if( window.url.getParam('food_item') ){
+        filters.selectedFoodItem = window.url.getParam('food_item');
+        filters.show = true;
+    }
+
+    let toggleFilters = () => {
+        filters.show = !filters.show
+        if( filters.show == false ){
+            router.get('/planner', {}, {
+                preserveState: true,
+                preserveScroll: true
+            });
+        }
+    };
+
+    let selectTag = ( slug ) => {
+        if( Number.isInteger(slug) ){
+            console.log('selected tag is number', slug)
+            router.get('/planner', { tag: slug }, {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: ( page ) => {
+                    filters.selectedTag = slug 
+                }
+            });
+        } else {
+            router.get('/planner', { food_item: slug }, {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: ( page ) => {
+                    filters.selectedFoodItem = slug
+                }
+            });
+        }
+    }
+    // END MEALS
+
+    // SHOPPING LIST
     let addToList = ( item ) => {
         router.post(`/shopping-list/add/${item.id}`, {
             preserveState: true,

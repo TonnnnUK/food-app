@@ -16,13 +16,13 @@ class CalendarService {
     };
 
     days = {
-        1: 'mon', 
-        2: 'tue', 
-        3: 'wed', 
-        4: 'thurs', 
-        5: 'fri', 
-        6: 'sat',
-        0: 'sun'
+        0: 'mon', 
+        1: 'tue', 
+        2: 'wed', 
+        3: 'thurs', 
+        4: 'fri', 
+        5: 'sat',
+        6: 'sun'
     }; 
 
     getCalendarDates(currentDate) {

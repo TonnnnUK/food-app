@@ -54,7 +54,8 @@
                     <div class="w-1/2 sm:w-1/3 md:w-auto"
                         v-for="food_type of food_types" :key="food_type.id"
                     >
-                        <span class="w-[95%] md:w-auto block px-2 py-2 capitalize transition duration-200 bg-blue-100 border border-blue-300 rounded-lg select-none md:w-auto md:px-4 hover:cursor-pointer hover:bg-orange-100 hover:border-orange-300"      
+                        <span class="w-[95%] md:w-auto block px-2 py-2 capitalize transition duration-200 border rounded-lg select-none md:w-auto md:px-4 hover:cursor-pointer hover:bg-orange-100 hover:border-orange-300"      
+                                :class="data.selectedFoodType == food_type.id ? 'bg-orange-100 border-orange-300' : 'bg-blue-100 border-blue-300'"
                             v-on:click="selectFoodType(food_type.id)"
                         >
                             {{food_type.name}}
@@ -66,13 +67,17 @@
                             shopping list
                         </span>
                     </div>
+                    <span v-if="foodItems && Object.keys(foodItems).length > 0" 
+                            class="px-2 py-1 text-lg bg-gray-300 rounded-lg cursor-pointer hover:bg-gray-400" 
+                            v-on:click="resetItems()">
+                        x
+                    </span>
                 </div>
                 <div class="relative flex flex-wrap mt-4 md:mt-2 gap-y-2 sm:gap-y-0 max-h-[120px] md:max-h-[200px] overflow-auto bg-white">
-                    <span v-if="foodItems && Object.keys(foodItems).length > 0" class="absolute p-2 cursor-pointer right-4" v-on:click="resetItems()">x</span>
                     <div v-for="item of foodItems" :key="item.id" class="flex items-center w-full sm:w-1/2 lg:w-1/3">
-                        <label class="flex items-center gap-2 p-1 mb-1 text-lg capitalize border border-gray-100 cursor-pointer hover:border-gray-400 md:text-sm">
-                            <input type="checkbox" v-model="selectedItems" :id="item.id" :value="item.id"> 
-                            {{ item.name }}
+                        <label class="flex items-center w-[95%] my-1 ml-1 text-lg capitalize">
+                            <input class="hidden peer" type="checkbox" v-model="selectedItems" :id="item.id" :value="item.id"> 
+                            <span class="w-full p-1 border border-gray-200 cursor-pointer peer-checked:bg-green-100 peer-checked:border-green-300 hover:border-green-300 md:text-sm">{{ item.name }}</span>
                         </label>
                     </div>
                 </div>
@@ -239,6 +244,11 @@
 
 
     // FOOD SEARCH //
+    if( window.url.getParam('type') ){
+        data.selectedFoodType = window.url.getParam('type');
+        data.itemForm.open = true;
+    }
+
     let search = ref('');
     let selectedItems = ref([]);
 
@@ -255,7 +265,11 @@
     let selectFoodType = (type_id) => {
         router.get('/inventory', { type: type_id }, {
             preserveState: true,
-            preserveScroll: true
+            preserveScroll: true,
+
+            onSuccess: (page) => {
+                data.selectedFoodType = type_id;
+            }
         });
     };
 
@@ -263,7 +277,11 @@
     let resetItems = () => {
         router.get('/inventory', '', {
             preserveState: true,
-            preserveScroll: true
+            preserveScroll: true,
+
+            onSuccess: (page) => {
+                data.selectedFoodType = 0
+            }
         });
     }
     //////////////////////////

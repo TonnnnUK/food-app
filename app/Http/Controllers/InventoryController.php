@@ -62,7 +62,7 @@ class InventoryController extends Controller
             if($type_id == 'shopping_list'){
                 $foodItems = $user->shopping_list;
             } else {
-                $foodItems = FoodItem::where('food_type_id', $type_id)->get();
+                $foodItems = FoodItem::where('food_type_id', $type_id)->orderBy('name')->get();
             }
 
         }

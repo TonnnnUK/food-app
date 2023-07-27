@@ -21,7 +21,18 @@
         </div>
 
         <div class="flex items-center gap-2 mb-2" v-if="props.entry.entry_type == 'Meal'">
+            <label class="text-xs text-right w-28" for="">Filter</label>
+            <select class="text-xs border border-gray-400 rounded-lg" v-model="data.selectedFilter">
+                <option value="0">-- Filter --</option>
+                <option v-for="filter, index in data.filters" :value="index" :key="filter">
+                    {{ filter }}
+                </option>
+            </select>
+        </div>
+        
+        <div class="flex items-center gap-2 mb-2" v-if="props.entry.entry_type == 'Meal'">
             <label class="text-xs text-right w-28" for="">Meal</label>
+
             <select class="text-xs border border-gray-400 rounded-lg" v-model="entry.meal_id">
                 <option value="0">-- Select meal --</option>
                 <option v-for="meal in props.entry.options.meals" :value="meal.id" :key="meal.id">
@@ -89,7 +100,7 @@
     </div>
 </template>
 <script setup>
-    import { reactive, computed } from "vue";
+    import { reactive, computed, watch } from "vue";
     import { router } from '@inertiajs/vue3';
     import { CalendarService } from '../Services/CalendarService';
     import TextInput from '@/Components/TextInput.vue';
@@ -106,12 +117,16 @@
         entry: {
             type: Object,
         },
+        filters: {
+            type: Object,
+        }
     });
 
-    const emit = defineEmits(['addedEntry']);
-
+    const emit = defineEmits(['addedEntry', 'filteredMeals']);
 
     let data =  reactive({
+        filters: props.filters,
+        selectedFilter: 0,
         entry_types: {
             'recipes': 'Recipe', 
             'meals': 'Meal', 
@@ -122,12 +137,27 @@
         errors: []
     });
 
+    watch( data,  function(value){
+        
+        console.log('filter changed', value.selectedFilter);
+        router.get('/planner', {
+                filterMealBy: value.selectedFilter 
+            }, 
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: ( page ) => {
+                    emit('filteredMeals', {data: page.props.meals})
+            }
+        });
+
+    });
+
     let addToPlanner = () => {
 
         validateData(); 
 
         router.post(`/entry/add`, { entry: props.entry}, {
-            preserveState: true,
             preserveScroll: true
         });
 

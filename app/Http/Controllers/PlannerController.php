@@ -35,30 +35,53 @@ class PlannerController extends Controller
 
         $entries = Entry::where('user_id', $user->id)->get();
 
-        $meals->map( function( Meal $meal, int $key ) use ( $inventory, $inventoryIds) {
-            $ingredientIds = $meal->ingredients->pluck('id');
-            $meal->ingredient_count = count($ingredientIds);
+        if( request('tag')){
 
-            
-            $matchingIngredients = $ingredientIds->intersect($inventoryIds);
-            $meal->inventory_match = $matchingIngredients->count();
-            
-            if( count($inventory) != 0 && $meal->inventory_match != 0){
-                $meal->match_percent = number_format($meal->inventory_match / count($ingredientIds) * 100);
-            } else {
-                $meal->match_percent = 0;
-            }
-            
+            $tagId = request('tag');
 
-            $filteredIngredients = $meal->ingredients->reject(function ($ingredient) use ($inventoryIds) {
-                return in_array($ingredient->id, $inventoryIds);
+            $meals = Meal::where('user_id', $user->id)->whereHas('tags', function ($query) use ($tagId) {
+                $query->where('meal_tag_id', $tagId);
+            })->get();
+
+        }   
+
+        if( request('food_item')){
+            $slug = request('food_item');
+            $meals =  $this->getMealsByFood($meals, $slug);
+        }
+
+        if( request('filterMealBy')){
+            $slug = request('filterMealBy');
+            $meals =  $this->getMealsByFood($meals, $slug);
+            // dd($meals);
+        } 
+
+        if( $meals ){
+            $meals->map( function( Meal $meal, int $key ) use ( $inventory, $inventoryIds) {
+                $ingredientIds = $meal->ingredients->pluck('id');
+                $meal->ingredient_count = count($ingredientIds);
+
+                
+                $matchingIngredients = $ingredientIds->intersect($inventoryIds);
+                $meal->inventory_match = $matchingIngredients->count();
+                
+                if( count($inventory) != 0 && $meal->inventory_match != 0){
+                    $meal->match_percent = number_format($meal->inventory_match / count($ingredientIds) * 100);
+                } else {
+                    $meal->match_percent = 0;
+                }
+                
+
+                $filteredIngredients = $meal->ingredients->reject(function ($ingredient) use ($inventoryIds) {
+                    return in_array($ingredient->id, $inventoryIds);
+                });
+
+                $meal->missingItems = $filteredIngredients;
+            
             });
-
-            $meal->missingItems = $filteredIngredients;
-        
-        });
-        
-        $sortedMeals = $meals->sortByDesc('match_percent')->values();
+            
+            $sortedMeals = $meals->sortByDesc('match_percent')->values();
+        }
 
         $custom_workouts = $user->workouts;
         
@@ -77,10 +100,19 @@ class PlannerController extends Controller
         }
 
         $locations = $user->locations;
+        $tags = $user->meal_tags;
+
+        $food_item_tags = [];
+        $food_item_tags['chicken-breast'] = 'Chicken Breast';
+        $food_item_tags['chicken-thighs'] = 'Chicken Thighs';
+        $food_item_tags['mince-beef'] = 'Mince Beef';
+        $food_item_tags['pork-steaks'] = 'Pork Steaks';
+        $food_item_tags['diced-beef'] = 'Diced Beef';
+        $food_item_tags['sirloin-steak'] = 'Sirloin Steak';
 
         return Inertia::render('Planner')->with([
             'recipes' => $recipes,
-            'meals' => $sortedMeals,
+            'meals' => isset($sortedMeals) ? $sortedMeals : null,
             'workouts' => $workouts,
             'custom_workouts' => $custom_workouts,
             'entries' => $entries,
@@ -88,6 +120,9 @@ class PlannerController extends Controller
             'shopping_list_ids' => $shopping_list_ids,
             'foodItems' => isset($foodItems) ? $foodItems : null,
             'locations' => $locations,
+            'tags' => $tags,
+            'food_item_tags' => $food_item_tags,
+            'filters' => $food_item_tags,
         ]);
     }
 
@@ -216,5 +251,25 @@ class PlannerController extends Controller
         return redirect('/planner');
     }
 
+
+    public function getMealsByFood($meals, $slug){
+        
+        $meals = $meals->filter( function($meal) use ($slug){ 
+            $matchingItems = $meal->ingredients->filter( function($ing) use ($slug){
+                $matchingIngredient = false;
+                if ($ing->slug == $slug){
+                    return $ing;
+                }
+
+            });
+
+            if( count($matchingItems) > 0 ) {
+                return $meal;
+            } else {
+                return false;
+            }
+        });
+        return $meals;
+    }
 
 }
