@@ -62,7 +62,8 @@
                         </span>
                     </div>
                     <div class="w-1/2 sm:w-1/3 md:w-auto">
-                        <span class="w-[95%] md:w-auto block px-2 py-2 capitalize transition duration-200 bg-blue-100 border border-blue-300 rounded-lg md:w-auto md:px-2 hover:cursor-pointer hover:bg-orange-100 hover:border-orange-300" 
+                        <span class="w-[95%] md:w-auto block px-2 py-2 capitalize transition duration-200 bg-blue-100 border border-blue-300 rounded-lg md:w-auto md:px-2 hover:cursor-pointer hover:bg-orange-100 hover:border-orange-300"
+                            :class="data.selectedFoodType == 'shopping_list' ? 'bg-orange-100 border-orange-300' : 'bg-blue-100 border-blue-300'"
                             v-on:click="selectFoodType('shopping_list')">
                             shopping list
                         </span>
@@ -198,6 +199,7 @@
     import { reactive, ref, watch } from "vue";
     import debounce from "lodash/debounce";
     import { CalendarService } from '@/Services/CalendarService';
+    import { UrlParamService } from '@/Services/URLParamService';
 
     let props = defineProps({
         'locations': Array,
@@ -220,6 +222,7 @@
         addTo: 0,
     });
 
+    window.url = new UrlParamService;
 
     // INVENTORY LOCATIONS //
     let newLocation = useForm({
@@ -298,16 +301,28 @@
 
     let addFoodItems = () => {
         router.post('/inventory/add-items', { 
-                items: selectedItems['_rawValue'],
+            items: selectedItems['_rawValue'],
                 location: data.addTo,
-            }, {
-            preserveState: true,
-            preserveScroll: true,
+            }, 
+            {
+                preserveState: true,
+                preserveScroll: true,
 
-            onSuccess: (page) => {
-                selectedItems = ref([]);
+                onSuccess: (page) => {
+                    if( data.selectedFoodType == 'shopping_list' ){
+                        router.post('/shopping-list/removeItems', {
+                            items: selectedItems['_rawValue'] 
+                            },
+                            {
+                                preserveState: true,
+                                preserveScroll: true
+                            } 
+                        );                    
+                    }
+                    selectedItems = ref([])
+                }
             }
-        });
+        );
 
 
     }

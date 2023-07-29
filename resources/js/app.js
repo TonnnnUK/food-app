@@ -4,10 +4,8 @@ import { createApp, h } from 'vue';
 import { Link, createInertiaApp, Head } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
-import { UrlParamService } from './Services/URLParamService';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Food Workout Planner';
-window.url = new UrlParamService;
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

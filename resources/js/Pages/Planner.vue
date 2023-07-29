@@ -351,6 +351,7 @@
     import { useForm, router } from '@inertiajs/vue3';
     import { reactive, watch, ref } from "vue";
     import { CalendarService } from '../Services/CalendarService';
+    import { UrlParamService } from '@/Services/URLParamService';
     import PlannerTab from '@/Components/PlannerTab.vue'
     import FoodItemPill from '@/Components/FoodItemPill.vue';
     import Modal from '@/Components/Modal.vue';
@@ -446,6 +447,8 @@
         },
         listBulkAdd: []
     });
+
+    window.url = new UrlParamService;
 
     let changeTab = (tab) => {
         data.selectedContent = tab.label;

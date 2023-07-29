@@ -210,6 +210,13 @@ class PlannerController extends Controller
         return redirect('/planner');
     }
 
+    public function removeItemsFromList()
+    {
+        $itemIDs = request()->items;
+        $remove = DB::table('shopping_list')->where('user_id', Auth::user()->id)->whereIn('food_item_id', $itemIDs)->delete();
+        return redirect('/inventory');
+    }
+
 
     public function generateList(){
 

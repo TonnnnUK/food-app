@@ -45,7 +45,7 @@
                             <div class="flex items-center gap-2 mb-2">
                                 <label class="text-xs">Tags:</label>
                                 <div class="flex flex-wrap gap-2">
-                                    <TagButton v-for="tag of tags" :key="tag.id"
+                                    <TagButton v-for="tag of tags" :key="tag.id" :class="isMatchingTag(tag.id) ? 'bg-orange-100 border-orange-200 text-orange-600' : ''"
                                         v-on:click="selectTag(tag.id)"
                                     >
                                         {{ tag.tag_name }}
@@ -55,7 +55,7 @@
                             <div class="flex items-center gap-2">
                                 <label class="text-xs">Ingredient:</label>
                                  <div class="flex flex-wrap gap-2">
-                                    <TagButton v-for="(tag, index) of food_item_tags" :key="tag"
+                                    <TagButton v-for="(tag, index) of food_item_tags" :key="tag" :class="isMatchingTag(index) ? 'bg-orange-100 border-orange-200 text-orange-600' : ''"
                                         v-on:click="selectTag(index)"
                                     >
                                         {{ tag }}
@@ -87,6 +87,7 @@ import { reactive, ref, watch } from "vue";
 import SmallButton from '@/Components/SmallButton.vue';
 import FormButton from '@/Components/FormButton.vue';
 import TagButton from '@/Components/TagButton.vue';
+import { UrlParamService } from '@/Services/URLParamService';
 
 
     defineProps({
@@ -95,8 +96,12 @@ import TagButton from '@/Components/TagButton.vue';
         'food_item_tags': Object,
     });
 
+    window.url = new UrlParamService;
+
     let filters = reactive({
-        show: false
+        show: false,
+        currentTag: 0,
+        currentItem: '',
     })
 
     let newMeal = useForm({
@@ -133,4 +138,22 @@ import TagButton from '@/Components/TagButton.vue';
             });
         }
     };
+
+
+    let isMatchingTag = (tag) => {
+
+        if( window.url.hasParam('tag')){
+            filters.currentTag = window.url.getParam('tag');
+            if( filters.currentTag == tag){
+                return true;
+            }
+        }
+
+        if( window.url.hasParam('food_item')){
+            filters.currentItem = url.getParam('food_item');
+            if( filters.currentItem == tag){
+                return true;
+            }
+        }
+    }
 </script>
