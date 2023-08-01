@@ -68,6 +68,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/meal/{meal}/remove/{fooditem}', [MealsController::class, 'removeIngredient']) ->name('remove-ingredient');
     Route::post('/meal/{meal}/duplicate', [MealsController::class, 'duplicate'])->name('duplicate-meal');
     Route::post('/meal/{meal}/add-to-shopping-list', [MealsController::class, 'addToList'])->name('add-meal-items-to-shopping-list');
+    Route::post('/meal/{meal}/add-tag/{tag}', [MealsController::class, 'addTag'])->name('add-tag-to-meal');
+    Route::post('/meal/{meal}/new-tag', [MealsController::class, 'newTag'])->name('add-new-tag-to-meal');
 
 
     Route::get('food', [FoodController::class, 'index'])->name('food-index');

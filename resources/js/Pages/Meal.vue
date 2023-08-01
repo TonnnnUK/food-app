@@ -119,10 +119,9 @@
                             </div>
                         </div>
 
-                        <div>
-                            <div class="flex flex-col w-full xl:w-9/12">
-                                <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                    <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                        <div class="flex flex-col w-full xl:w-9/12">
+                            <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                                     <div class="overflow-hidden">
                                         <table class="min-w-full text-sm font-light text-left">
                                         <thead class="font-medium border-b dark:border-neutral-500">
@@ -149,12 +148,33 @@
                                         </tbody>
                                         </table>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col w-full px-2 my-2 md:my-4 lg:w-9/12 md:px-4">
+                            <h3>Tags</h3>
+                            <div class="flex justify-between">
+                                <div class="md:w-1/2">
+                                    <div class="flex gap-2">
+                                        <FoodItemPill v-for="tag of tags" :key="tag.id" :item="tag.tag_name" />
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col gap-2 md:w-1/2">
+                                    <div class="flex gap-2">
+                                        <input class="w-auto text-xs border-0 border-b border-gray-300 rounded" placeholder="new tag..." type="text" v-model="newTag" />
+                                        <SmallButton class="bg-blue-300 hover:bg-blue-400">Save</SmallButton>
+                                    </div>
+
+                                    <small v-if="fetchTags.length > 0 ">Your existing tags...</small>
+                                    <div class="flex gap-2">
+                                        <FoodItemPill v-for="foundtag of fetchTags" :key="foundtag" :item="foundtag.tag_name" v-on:click="selectTag(foundtag.id)" />
                                     </div>
                                 </div>
                             </div>
-
+                            
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -171,6 +191,7 @@
     import SelectInput from '@/Components/SelectInput.vue';
     import FoodItemPill from '@/Components/FoodItemPill.vue';
     import PrimaryButton from '@/Components/PrimaryButton.vue';
+    import SmallButton from '@/Components/SmallButton.vue';
 
     const props = defineProps({
         'meal': Object,
@@ -178,6 +199,8 @@
         'units': Object,
         'foodItems': Object,
         'foodTypes': Object,
+        'tags': Object,
+        'fetchTags': Object,
     });
 
     
@@ -188,7 +211,7 @@
         errors: [],
         editingName: false,
         makeDuplicate: false,
-        selectedFoodType: false
+        selectedFoodType: false,
     });
 
 
@@ -317,6 +340,26 @@
             preserveState: true,
             preserveScroll: true
         });
+    }
+
+    
+    let newTag = ref('');
+    let watchNewTag = () => {
+        watch( newTag, debounce( function(value){
+    
+            router.get(`/meal/${data.mealID}`, { tag: value}, {
+                preserveState: true,
+                preserveScroll: true
+            });
+        
+    
+        }, 300) );
+    }
+
+    watchNewTag();
+
+    let selectTag = (tag) => {
+        console.log('selecting tag', tag);
     }
 
 </script>

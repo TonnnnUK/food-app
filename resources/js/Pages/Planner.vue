@@ -80,7 +80,7 @@
                             <div v-for="day of data.fullCalendar" :key="day" class="w-full sm:w-1/2 md:w-1/4 lg:w-[14%] inline-block capitalize border text-xs p-2 flex flex-col group">
                                 <span class="mt-1 mb-1" :class="Calendar.datesAreEqual(day, dt) ? 'font-bold' : '' ">
                                     <span :class="Calendar.dateIsBefore(day, dt) ? 'text-gray-300' : '' ">
-                                        <span class="lg:hidden">{{ Calendar.days[day.getDay()] }}</span>
+                                        <span class="lg:hidden">{{ Calendar.days[day.getDay()-1] }}</span>
                                         {{ day.getDate() }}
                                         <span class="lg:hidden">{{ Calendar.months[day.getMonth()] }}</span>
                                         <span class="px-2 py-1 ml-2 bg-gray-200 rounded-lg" v-if="Calendar.datesAreEqual(day, dt)">Today</span>
@@ -90,27 +90,27 @@
                                 <div class="my-2">
                                     <span v-for="entry of entries" :key="entry.id">
                                         <span class="" v-if="matchingDate(day, entry) && entry.id != data.deleteEntryId" v-on:click="data.deleteEntryId = entry.id"> 
-                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-red-100 border border-red-200 rounded-lg hover:cursor-pointer hover:bg-red-200" 
+                                            <small class="inline-block px-3 py-1 mb-1 text-xs transition duration-200 bg-red-100 border border-red-200 rounded-lg hover:cursor-pointer hover:bg-red-200" 
                                                 v-if="entry.meal"
                                             >
                                                 {{ entry.meal.name }} 
                                             </small>
-                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-yellow-100 border border-yellow-200 rounded-lg hover:cursor-pointer hover:bg-yellow-200" 
+                                            <small class="inline-block px-3 py-1 mb-1 text-xs transition duration-200 bg-yellow-100 border border-yellow-200 rounded-lg hover:cursor-pointer hover:bg-yellow-200" 
                                                 v-if="entry.recipe"
                                             >
                                                 {{ entry.recipe.name }} 
                                             </small>
-                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-blue-100 border border-blue-200 rounded-lg hover:cursor-pointer hover:bg-blue-200" 
+                                            <small class="inline-block px-3 py-1 mb-1 text-xs transition duration-200 bg-blue-100 border border-blue-200 rounded-lg hover:cursor-pointer hover:bg-blue-200" 
                                                 v-if="entry.workout"
                                             >
                                                 {{ entry.workout.name }} 
                                             </small>
-                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-green-100 border border-green-200 rounded-lg hover:cursor-pointer hover:bg-green-200" 
+                                            <small class="inline-block px-3 py-1 mb-1 text-xs transition duration-200 bg-green-100 border border-green-200 rounded-lg hover:cursor-pointer hover:bg-green-200" 
                                                 v-if="entry.custom_workout"
                                             >
                                                 {{ entry.custom_workout.name }} 
                                             </small>
-                                            <small class="block px-3 py-1 mb-1 text-xs transition duration-200 bg-gray-100 border border-gray-200 rounded-lg hover:cursor-pointer hover:bg-gray-200" 
+                                            <small class="inline-block px-3 py-1 mb-1 text-xs transition duration-200 bg-gray-100 border border-gray-200 rounded-lg hover:cursor-pointer hover:bg-gray-200" 
                                                 v-if="entry.entry_type 
                                             == 'Note'">
                                                 {{ entry.entry_data.notes }} 

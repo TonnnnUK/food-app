@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Meal;
 use App\Models\Unit;
 use Inertia\Inertia;
+use App\Models\MealTag;
 use App\Models\FoodItem;
 use App\Models\FoodType;
 use Illuminate\Support\Arr;
@@ -79,16 +80,25 @@ class MealsController extends Controller
 
         $units = Unit::all();
         $food_types = FoodType::all();
+        $tags = $meal->tags;
+        $fetchTags = [];
         
         if( request()->type){
             $foodItems = FoodItem::where('food_type_id', request()->type)->orderBy('name')->get();
         }
-
+        
+        if( request()->tag){
+            $search = request()->tag;
+            $fetchTags = MealTag::where('user_id', Auth::user()->id)->where('tag_name', 'LIKE', "%$search%")->get();
+        }
+        
         return Inertia::render('Meal')->with([
             'meal' => $meal,
             'units' => $units,
             'foodItems' => isset($foodItems) ? $foodItems : null,
             'foodTypes' => $food_types,
+            'tags' => $tags,
+            'fetchTags' => $fetchTags
         ]);
         
     }
@@ -184,5 +194,9 @@ class MealsController extends Controller
 
         return redirect("/planner");
     }
+
+    public function addTag(){}
+    
+    public function newTag(){}
 
 }
