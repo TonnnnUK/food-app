@@ -12,7 +12,9 @@ class Recipe extends Model
 
     public function ingredients()
     {
-        return $this->belongsToMany(FoodItem::class, 'recipe_food_items');
+        return $this->belongsToMany(FoodItem::class, 'recipe_food_items')
+                    ->withPivot(['qty', 'unit_id'])
+                    ->withTimestamps();
     }
 
     public function tags()

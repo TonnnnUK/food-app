@@ -46,11 +46,11 @@ class RecipesController extends Controller
 
     public function show(Recipe $recipe)
     {
-
         $units = Unit::all();
         $food_types = FoodType::all();
         $tags = RecipeTag::all();
         $fetchTags = [];
+        $unitsArray = $units->pluck('name', 'id')->toArray();
         
         if( request()->type){
             $foodItems = FoodItem::where('food_type_id', request()->type)->orderBy('name')->get();
@@ -63,11 +63,7 @@ class RecipesController extends Controller
         
         return Inertia::render('Recipe')->with([
             'recipe' => $recipe,
-            'units' => $units,
-            'foodItems' => isset($foodItems) ? $foodItems : null,
-            'foodTypes' => $food_types,
-            'tags' => $tags,
-            'fetchTags' => $fetchTags
+            'units' => $unitsArray
         ]);
         
     }
@@ -83,6 +79,7 @@ class RecipesController extends Controller
         $food_types = FoodType::all();
         $tags = RecipeTag::all();
         $fetchTags = [];
+        $unitsArray = $units->pluck('name', 'id')->toArray();
         
         if( request()->type){
             $foodItems = FoodItem::where('food_type_id', request()->type)->orderBy('name')->get();
@@ -99,7 +96,8 @@ class RecipesController extends Controller
             'foodItems' => isset($foodItems) ? $foodItems : null,
             'foodTypes' => $food_types,
             'tags' => $tags,
-            'fetchTags' => $fetchTags
+            'fetchTags' => $fetchTags,
+            'unitsArray' => $unitsArray
         ]);
         
     }

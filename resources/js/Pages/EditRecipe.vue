@@ -116,7 +116,7 @@
                                     <tbody>
                                         <tr class="border-b dark:border-neutral-500" v-for="ingredient of recipe.ingredients" :key="ingredient.id">
                                             <td class="px-6 py-4 font-medium whitespace-nowrap"><span class="capitalize">{{ ingredient.name }}</span></td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ ingredient.pivot.qty }} {{ ingredient.pivot.unit == 'number' ? '' : ingredient.pivot.unit }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ ingredient.pivot.qty }} {{ unitsArray[ingredient.pivot.unit_id] }}</td>
                                             <td class="px-6 py-4 text-right whitespace-nowrap">
                                                 <span class="text-xs font-bold text-red-600 hover:cursor-pointer hover:underline" v-on:click="removeIngredient(ingredient)">X</span>
                                             </td>
@@ -153,6 +153,7 @@
         'foodTypes': Object,
         'tags': Object,
         'fetchTags': Object,
+        'unitsArray': Object,
     });
         
     let data = reactive({
