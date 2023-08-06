@@ -8,6 +8,7 @@ use App\Models\Recipe;
 use App\Models\FoodItem;
 use App\Models\FoodType;
 use App\Models\RecipeTag;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,10 +39,11 @@ class RecipesController extends Controller
 
         $addRecipe = Recipe::create([
             'name' => request('name'),
+            'slug' => Str::slug( request('name') ),
             'servings' => request('servings')
         ]);
 
-        return redirect("/recipe/$addRecipe->id");
+        return redirect("/recipe/$addRecipe->id/edit");
     }
 
     public function show(Recipe $recipe)
