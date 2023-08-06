@@ -11,6 +11,7 @@ import { Link } from '@inertiajs/vue3';
 
 
 const showingNavigationDropdown = ref(false);
+
 </script>
 
 <template>
@@ -30,7 +31,7 @@ const showingNavigationDropdown = ref(false);
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <NavLink :href="route('dashboard')" :active="route().current('dashboard')" v-if="$page.props.auth.user">
+                    <NavLink :href="route('dashboard')" :active="route().current('dashboard')" v-if="$page.props.auth.user.email != null">
                         Dashboard
                     </NavLink>
 
@@ -38,15 +39,19 @@ const showingNavigationDropdown = ref(false);
                         Home
                     </NavLink>
 
-                    <NavLink :href="route('planner')" :active="route().current('planner')" v-if="$page.props.auth.user">
+                    <NavLink :href="route('planner')" :active="route().current('planner')" v-if="$page.props.auth.user.email != null">
                         Planner
                     </NavLink>
                     
-                    <NavLink :href="route('inventory')" :active="route().current('inventory')" v-if="$page.props.auth.user">
+                    <NavLink :href="route('inventory')" :active="route().current('inventory')" v-if="$page.props.auth.user.email != null">
                         Inventory
                     </NavLink>
 
-                    <NavLink :href="route('meals')"  :active="route().current('meals')" v-if="$page.props.auth.user">
+                    <NavLink :href="route('recipes')"  :active="route().current('recipes')">
+                        Recipes
+                    </NavLink>
+                    
+                    <NavLink :href="route('meals')"  :active="route().current('meals')" v-if="$page.props.auth.user.email != null">
                         Meals
                     </NavLink>
 
@@ -60,7 +65,7 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </div>
 
-            <div class="hidden sm:flex sm:items-center sm:ml-6" v-if="$page.props.auth.user">
+            <div class="hidden sm:flex sm:items-center sm:ml-6" v-if="$page.props.auth.user.email != null">
                 <!-- Settings Dropdown -->
                 <div class="relative ml-3">
                     <Dropdown align="right" width="48">

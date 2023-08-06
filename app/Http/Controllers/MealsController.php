@@ -195,8 +195,24 @@ class MealsController extends Controller
         return redirect("/planner");
     }
 
-    public function addTag(){}
+    public function addTag(Meal $meal, MealTag $tag){
+        $meal->tags()->syncWithoutDetaching($tag);
     
-    public function newTag(){}
+        return redirect("meal/$meal->id"); 
+    }
+    
+    public function newTag(Meal $meal){
+
+        $user = Auth::user();
+
+        $tag = new MealTag;
+        $tag->tag_name = request()->tag;
+        $tag->user_id = $user->id;
+        $tag->save();
+
+        $meal->tags()->attach($tag);
+
+        return redirect("meal/$meal->id"); 
+    }
 
 }

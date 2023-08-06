@@ -32,6 +32,6 @@ class Meal extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(MealTag::class, 'user_meal_tags');
+        return $this->belongsToMany(MealTag::class, 'user_meal_tags')->withTimestamps();
     }
 }

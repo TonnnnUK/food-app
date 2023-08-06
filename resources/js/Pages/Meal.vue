@@ -152,11 +152,11 @@
                             </div>
                         </div>
                         
-                        <div class="flex flex-col w-full px-2 my-2 md:my-4 lg:w-9/12 md:px-4">
+                        <div class="flex flex-col w-full px-2 my-2 md:my-4 md:px-4">
                             <h3>Tags</h3>
                             <div class="flex justify-between">
                                 <div class="md:w-1/2">
-                                    <div class="flex gap-2">
+                                    <div class="flex flex-wrap gap-2">
                                         <FoodItemPill v-for="tag of tags" :key="tag.id" :item="tag.tag_name" />
                                     </div>
                                 </div>
@@ -164,11 +164,11 @@
                                 <div class="flex flex-col gap-2 md:w-1/2">
                                     <div class="flex gap-2">
                                         <input class="w-auto text-xs border-0 border-b border-gray-300 rounded" placeholder="new tag..." type="text" v-model="newTag" />
-                                        <SmallButton class="bg-blue-300 hover:bg-blue-400">Save</SmallButton>
+                                        <SmallButton class="bg-blue-300 hover:bg-blue-400" v-on:click="saveTag">Save</SmallButton>
                                     </div>
 
                                     <small v-if="fetchTags.length > 0 ">Your existing tags...</small>
-                                    <div class="flex gap-2">
+                                    <div class="flex flex-wrap gap-2">
                                         <FoodItemPill v-for="foundtag of fetchTags" :key="foundtag" :item="foundtag.tag_name" v-on:click="selectTag(foundtag.id)" />
                                     </div>
                                 </div>
@@ -359,7 +359,24 @@
     watchNewTag();
 
     let selectTag = (tag) => {
-        console.log('selecting tag', tag);
+        router.post(`/meal/${data.mealID}/add-tag/${tag}`, null, {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    newTag.value = '';
+                }
+            });
+
+    }
+
+    let saveTag = () => {
+        router.post(`/meal/${data.mealID}/new-tag`, { tag: newTag._value}, {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    newTag.value = '';
+                }
+            });
     }
 
 </script>

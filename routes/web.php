@@ -8,6 +8,7 @@ use App\Http\Controllers\MealsController;
 use App\Http\Controllers\ActionController;
 use App\Http\Controllers\PlannerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RecipesController;
 use App\Http\Controllers\WorkoutController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\DashboardController;
@@ -25,13 +26,12 @@ use App\Http\Controllers\InventoryController;
 */
 
 Route::get('/', function () {
-    return redirect('/dashboard');
-    // return Inertia::render('Home', [
-    //     'canLogin' => Route::has('login'),
-    //     'canRegister' => Route::has('register'),
-    //     'laravelVersion' => Application::VERSION,
-    //     'phpVersion' => PHP_VERSION,
-    // ]);
+    return Inertia::render('Home', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 })->name('home');
 
 
@@ -70,8 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/meal/{meal}/add-to-shopping-list', [MealsController::class, 'addToList'])->name('add-meal-items-to-shopping-list');
     Route::post('/meal/{meal}/add-tag/{tag}', [MealsController::class, 'addTag'])->name('add-tag-to-meal');
     Route::post('/meal/{meal}/new-tag', [MealsController::class, 'newTag'])->name('add-new-tag-to-meal');
-
-
+    
     Route::get('food', [FoodController::class, 'index'])->name('food-index');
     Route::post('food', [FoodController::class, 'save'])->name('add-food-item');
 
@@ -79,7 +78,10 @@ Route::middleware('auth')->group(function () {
     Route::post('shopping-list/remove/{id}', [PlannerController::class, 'removeFromList'])->name('remove-from-shopping-list');
     Route::post('shopping-list/removeItems', [PlannerController::class, 'removeItemsFromList'])->name('remove-items-from-shopping-list');
     Route::post('shopping-list/generate', [PlannerController::class, 'generateList'])->name('generate-shopping-list');
-
+    
+    Route::post('/recipes', [RecipesController::class, 'save'])->name('add-recipe');
+    Route::post('/recipe/{recipe}', [RecipesController::class, 'addIngredient'])->name('add-recipe-ingredient');
+    Route::post('/recipe/{recipe}/remove/{fooditem}', [RecipesController::class, 'removeIngredient']) ->name('remove-recipe-ingredient');
 
 });
 
@@ -88,5 +90,9 @@ Route::get('/exercise/{exercise:slug}', [ExerciseController::class, 'show'])->na
 
 Route::get('/workouts', [WorkoutController::class, 'index'])->name('workouts');
 Route::get('/workouts/{workout:slug}', [WorkoutController::class, 'show'])->name('workout-info');
+
+Route::get('/recipes', [RecipesController::class, 'index'])->name('recipes');
+Route::get('/recipe/{recipe:slug}', [RecipesController::class, 'show'])->name('recipe-info');
+Route::get('/recipe/{recipe}/edit', [RecipesController::class, 'edit'])->name('edit-recipe');
 
 require __DIR__.'/auth.php';

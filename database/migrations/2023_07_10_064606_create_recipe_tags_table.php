@@ -15,15 +15,9 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('tag_name');
-            $table->foreignId('user_id');
-
-            $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('cascade');
         });
         
-        Schema::create('user_recipe_tags', function (Blueprint $table) {
+        Schema::create('recipe_tags_tag', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('recipe_tag_id');
