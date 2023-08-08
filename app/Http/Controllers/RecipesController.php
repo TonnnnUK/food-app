@@ -123,4 +123,16 @@ class RecipesController extends Controller
 
         return redirect("/recipe/$recipe->id/edit");
     }
+
+    public function update(Recipe $recipe){
+
+        $updated = request()->recipe;
+        $recipe->servings = $updated['servings'];
+        $recipe->link = $updated['link'];
+        $recipe->description = $updated['description'];
+        $recipe->method = $updated['method'];
+        $recipe->save();
+
+        return redirect("/recipe/$recipe->id/edit");
+    }
 }

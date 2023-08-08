@@ -29,8 +29,18 @@
                                 <span>Servings: {{ recipe.servings }} </span>
                             </div>
                         </div>
+
+                        <a target="_blank"  class="text-xs text-blue-600 hover:underline" :href="recipe.link">{{ recipe.link }}</a>
                     </div>
 
+                    <div class="flex flex-col w-full px-2 py-2 text-sm md:px-4 xl:w-9/12 md:py-4">
+                    
+                        <div class="mb-2 md:mb-4" v-html="recipe.description"></div>
+                        
+                        <div class="text-xs" v-html="recipe.method"></div>
+
+                    </div>
+                    
                     <div class="flex flex-col w-full px-2 md:px-4 xl:w-9/12">
                         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">

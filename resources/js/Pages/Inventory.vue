@@ -109,7 +109,7 @@
                             
                                 <div class="min-w-full font-light text-left md:text-sm">
                                     
-                                    <div class="flex flex-wrap items-center py-4 border-b w-100 dark:border-neutral-500" 
+                                    <div class="flex flex-wrap items-center py-4 border-b w-100 dark:border-neutral-500 group" 
                                         v-for="item of location.recipes" :key="item.id">
                                         <div class="w-3/4 px-2 font-medium md:w-1/4">
                                             <span class="capitalize">{{ item.name }}</span>
@@ -118,7 +118,14 @@
                                             {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
                                         </div>
                                         <div class="order-2 w-1/2 px-2 md:w-1/4">
-                                            <!-- Move -->
+                                            <div class="items-center hidden gap-2 group-hover:flex">
+                                                <label class="text-xs">Move to</label>
+                                                <select class="text-xs border border-gray-200 rounded-lg cursor-pointer" v-on:change="checkMoveItem($event, 'recipe', item)">
+                                                    <option value="0">-- Select --</option>
+                                                    <option v-for="loc of locations" :key="loc.id" :value="loc.id">{{loc.name}}</option>
+                                                </select>
+                                            </div>
+                                            
                                         </div>
                                         <div class="flex justify-end w-1/2 gap-4 px-2 md:w-1/4">
                                             <!-- <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link> -->
@@ -130,7 +137,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-wrap items-center py-4 border-b w-100 dark:border-neutral-500" 
+                                    <div class="flex flex-wrap items-center py-4 border-b w-100 dark:border-neutral-500 group" 
                                         v-for="item of location.meals" :key="item.id">
                                         <div class="w-full px-2 font-medium md:w-1/4">
                                             <span class="capitalize">{{ item.name }}</span>
@@ -139,9 +146,13 @@
                                             {{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}
                                         </div>
                                         <div class="w-1/2 px-2 md:w-1/4">
-                                            <!-- TO DO
-                                                Move item location
-                                            -->
+                                            <div class="items-center hidden gap-2 group-hover:flex">
+                                                <label class="text-xs">Move to</label>
+                                                <select class="text-xs border border-gray-200 rounded-lg cursor-pointer" v-on:change="checkMoveItem($event, 'meal', item)">
+                                                    <option value="0">-- Select --</option>
+                                                    <option v-for="loc of locations" :key="loc.id" :value="loc.id">{{loc.name}}</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="flex justify-end w-1/2 gap-4 px-2 md:w-1/4">
                                             <!-- <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link> -->
@@ -153,16 +164,20 @@
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-wrap items-center justify-between py-4 border-b w-100 dark:border-neutral-500" 
+                                    <div class="flex flex-wrap items-center justify-between py-4 border-b w-100 dark:border-neutral-500 group" 
                                         v-for="item of location.items" :key="item.id">
                                         <div class="w-full px-2 font-medium md:w-1/4 grow-2 ">
                                             <span class="capitalize">{{ item.name }}</span>
                                         </div>
                                         <div class="w-full px-2 md:w-1/4 grow-1">{{ item.pivot.qty ? item.pivot.qty : '' }} {{ units[item.pivot.unit_id-1] ? units[item.pivot.unit_id-1].name : '' }}</div>
                                         <div class="w-1/2 px-2 md:w-1/4 grow-1">
-                                            <!-- TO DO
-                                                Move item location
-                                            -->
+                                            <div class="items-center hidden gap-2 group-hover:flex">
+                                                <label class="text-xs">Move to</label>
+                                                <select class="text-xs border border-gray-200 rounded-lg cursor-pointer" v-on:change="checkMoveItem($event, 'item', item)">
+                                                    <option value="0">-- Select --</option>
+                                                    <option v-for="loc of locations" :key="loc.id" :value="loc.id">{{loc.name}}</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="flex justify-end w-1/2 gap-4 px-2 md:w-1/4 grow-1">
                                             <!-- <Link :href="route('meals-by-item', item.id)" class="text-blue-700 transition duration-200 hover:text-blue-900"><i class="fas fa-utensils"></i></Link> -->
@@ -200,6 +215,7 @@
     import debounce from "lodash/debounce";
     import { CalendarService } from '@/Services/CalendarService';
     import { UrlParamService } from '@/Services/URLParamService';
+    import SelectInput from '@/Components/SelectInput.vue';
 
     let props = defineProps({
         'locations': Array,
@@ -220,6 +236,7 @@
             display: 0
         },
         addTo: 0,
+        swap: {}
     });
 
     window.url = new UrlParamService;
@@ -346,5 +363,22 @@
     //////////////////////////
     // ADD FOOD ITEMS END //
     //////////////////////////
+
+
+    let checkMoveItem = (event, type, item ) => {
+        console.log('checkMoveItem', event.target.value, type, item);
+        if ( event.target.value == 0 ){
+            return;
+        } 
+
+        router.post(`/inventory/move-item`, {
+            'location': event.target.value,
+            'type': type,
+            'item': item
+        },{ 
+            preserveState: true,
+            preserveScroll: true
+        });
+    }
 
 </script>

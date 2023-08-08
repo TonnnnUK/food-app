@@ -150,5 +150,42 @@ class InventoryController extends Controller
         return redirect('/inventory');
     }
 
+    public function moveItem(){
+
+        
+        $location = request()->location;
+        $type = request()->type;
+        $item = request()->item;
+        
+        if( $location == $item['pivot']['location_id'] )
+        {
+            return redirect('/inventory');
+        }
+
+        if( $type == 'meal' ){
+            $table = 'user_meals';
+            $column = 'meal_id';
+        }
+        
+        if( $type == 'recipe' ){
+            $table = 'user_recipes';
+            $column = 'recipe_id';
+        }
+        
+        if( $type == 'item' ){
+            $table = 'user_food_items';
+            $column = 'fod_item_id';
+        }
+
+        $update = DB::table($table)
+                    ->where('user_id', Auth::user()->id)
+                    ->where($column, $item['id'])
+                    ->update([
+                        'location_id' => $location
+                    ]);
+
+        return redirect('/inventory');
+    }
+
 
 }

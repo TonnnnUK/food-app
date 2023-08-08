@@ -16,7 +16,10 @@
                 <div class="px-2 overflow-hidden bg-white shadow-sm sm:rounded-lg md:px-4">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <div class="flex items-center justify-between">
-                            <h2 class="text-xl font-bold">{{recipe.name}}</h2>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-xl font-bold">{{recipe.name}}</h2>
+                                <Link class="text-xs text-blue-600 hover:underline" :href="route('recipe-info', recipe.slug)">View</Link>
+                            </div>
 
                             <div  class="flex items-center gap-2 text-sm">
                                 <label for="">Servings</label>
@@ -25,6 +28,26 @@
                         </div>
                     </div>
 
+                    <div class="my-4">
+                        <div class="flex flex-col gap-4">
+                             <div class="flex flex-col">
+                                <label class="px-2 text-sm">Link</label>
+                                <TextInput class="w-full px-3 py-1 text-sm border sm:w-1/2 lg:w-1/3" v-model="recipe.link" />
+                            </div>   
+                            <div class="flex flex-col lg:w-2/3">
+                                <label class="px-2 text-sm">Description</label>
+                                <textarea cols="30" rows="2" class="text-sm text-gray-700 border border-gray-300 rounded-lg" v-model="recipe.description">Description</textarea>
+                            </div>
+                            <div class="flex flex-col lg:w-2/3">
+                                <label class="px-2 text-sm">Method</label>
+                                <textarea cols="30" rows="6" class="text-sm text-gray-700 border border-gray-300 rounded-lg" v-model="recipe.method">Method</textarea>
+                            </div>
+
+                            <div>
+                                <PrimaryButton v-on:click="saveRecipe()">Save</PrimaryButton>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="my-4">
                         <div class="flex flex-col gap-2 md:items-center md:flex-row md:flex-wrap">
@@ -269,6 +292,16 @@
             preserveState: true,
             preserveScroll: true
         });
+    }
+
+    let saveRecipe = () => {
+        router.post(`/recipe/${data.recipeID}/save`, {
+            recipe: props.recipe
+        },{
+            preserveState: true,
+            preserveScroll: true
+            
+        })
     }
 
 </script>
