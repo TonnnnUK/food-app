@@ -248,13 +248,14 @@ class PlannerController extends Controller
         });
 
         $ids = $items->pluck('id')->toArray();
+
         $shopping_list = $user->shopping_list->pluck('id')->toArray();
         $inventory = $user->food_items->pluck('id')->toArray();
-        
-        $result = array_diff($ids, $shopping_list);
-        $result = array_diff($ids, $inventory);
 
-        $user->shopping_list()->attach($result);
+        $ids = array_diff($ids, $shopping_list); // remove IDs already in shopping list
+        $ids = array_diff($ids, $inventory); // remove IDs already in inventory
+        
+        $user->shopping_list()->attach($ids);
         return redirect('/planner');
     }
 
