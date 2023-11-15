@@ -174,7 +174,7 @@ class InventoryController extends Controller
         
         if( $type == 'item' ){
             $table = 'user_food_items';
-            $column = 'fod_item_id';
+            $column = 'food_item_id';
         }
 
         $update = DB::table($table)
