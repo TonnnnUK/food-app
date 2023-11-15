@@ -337,7 +337,13 @@
 
             <!-- ENTRY MODAL -->
             <Modal :show="data.addingEntry" @close="closeModal">
-                <PlannerEntryForm :entry="data.entryData" :filters="props.filters" @addedEntry="resetEntryForm()" @filteredMeals="updateMealsForModal(meals)"></PlannerEntryForm>
+                <PlannerEntryForm 
+                    :entry="data.entryData" 
+                    :filters="props.filters" 
+                    @addedEntry="resetEntryForm()" 
+                    @filteredMeals="updateMealsForModal(meals)"
+                />
+                
             </Modal>
 
 
@@ -668,10 +674,9 @@
         router.post(`shopping-list/add/${item.id}`, {
             preserveState: true,
             preserveScroll: true,
-            onSuccess: (page) => {
-                search = '';
-            }
         });
+
+        search = '';
 
     };
 
