@@ -80,4 +80,25 @@ class User extends Authenticatable
     {
         return $this->hasMany(MealTag::class);
     }
+
+    public function meals_by_food_item($fooditem){
+        
+        $meals = $this->meals->filter( function($meal) use ($fooditem){ 
+            $matchingItems = $meal->ingredients->filter( function($ing) use ( $fooditem ){
+                $matchingIngredient = false;
+                if ($ing->slug == $fooditem->slug){
+                    return $ing;
+                }
+
+            });
+
+            if( count($matchingItems) > 0 ) {
+                return $meal;
+            } else {
+                return false;
+            }
+        });
+
+        return $meals;
+    }
 }

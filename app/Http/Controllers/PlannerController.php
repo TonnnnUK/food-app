@@ -45,16 +45,22 @@ class PlannerController extends Controller
 
         }   
 
-        if( request('food_item')){
-            $slug = request('food_item');
-            $meals =  $this->getMealsByFood($meals, $slug);
-        }
+        // if( request('food_item')){
+        //     $slug = request('food_item');
+        //     $meals =  $this->getMealsByFood($meals, $slug);
+        // }
 
-        if( request('filterMealBy')){
-            $slug = request('filterMealBy');
-            $meals =  $this->getMealsByFood($meals, $slug);
-            // dd($meals);
-        } 
+        // if( request('filterByIngredient')){
+        //     $slug = request('filterByIngredient');
+        //     $meals =  $this->getMealsByFood($meals, $slug);
+        //     // dd($meals);
+        // }
+
+        // if( request('filterByTag')){
+        //     $tag = request('filterByTag');
+        //     $meals =  $this->getMealsByTag($meals, $tag);
+        //     // dd($meals);
+        // } 
 
         if( $meals ){
             $meals->map( function( Meal $meal, int $key ) use ( $inventory, $inventoryIds) {
@@ -260,24 +266,25 @@ class PlannerController extends Controller
     }
 
 
-    public function getMealsByFood($meals, $slug){
+    // public function getMealsByFood($meals, $slug){
         
-        $meals = $meals->filter( function($meal) use ($slug){ 
-            $matchingItems = $meal->ingredients->filter( function($ing) use ($slug){
-                $matchingIngredient = false;
-                if ($ing->slug == $slug){
-                    return $ing;
-                }
+    //     $meals = $meals->filter( function($meal) use ($slug){ 
+    //         $matchingItems = $meal->ingredients->filter( function($ing) use ($slug){
+    //             $matchingIngredient = false;
+    //             if ($ing->slug == $slug){
+    //                 return $ing;
+    //             }
 
-            });
+    //         });
 
-            if( count($matchingItems) > 0 ) {
-                return $meal;
-            } else {
-                return false;
-            }
-        });
-        return $meals;
-    }
+    //         if( count($matchingItems) > 0 ) {
+    //             return $meal;
+    //         } else {
+    //             return false;
+    //         }
+    //     });
+
+    //     return $meals;
+    // }
 
 }

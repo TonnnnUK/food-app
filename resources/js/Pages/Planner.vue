@@ -340,8 +340,9 @@
                 <PlannerEntryForm 
                     :entry="data.entryData" 
                     :filters="props.filters" 
+                    :tags="props.tags" 
                     @addedEntry="resetEntryForm()" 
-                    @filteredMeals="updateMealsForModal(meals)"
+                    @filteredMealsByIngredient="updateMealsForModal(meals)"
                 />
                 
             </Modal>
@@ -542,7 +543,7 @@
     }
 
     let updateMealsForModal = ( meals ) => {
-        console.log('updateMealsForModal', meals);
+        console.log('updateMealsForModals please', meals);
         data.entryData.options.meals = meals;
     }
     // END CALENDAR
@@ -675,8 +676,6 @@
             preserveState: true,
             preserveScroll: true,
         });
-
-        search = '';
 
     };
 

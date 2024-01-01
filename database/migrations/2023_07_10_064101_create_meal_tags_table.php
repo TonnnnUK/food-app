@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('meal_tags', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('tag_name');
+            $table->string('tag_name');
             $table->foreignId('user_id');
         
             $table->foreign('user_id')

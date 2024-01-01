@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('recipe_tags', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('tag_name');
+            $table->string('tag_name');
         });
         
         Schema::create('recipe_tags_tag', function (Blueprint $table) {
@@ -24,9 +24,9 @@ return new class extends Migration
             $table->foreignId('recipe_id');
 
             $table->foreign('recipe_id')
-                        ->references('id')
-                        ->on('recipes')
-                        ->onDelete('cascade');
+                    ->references('id')
+                    ->on('recipes')
+                    ->onDelete('cascade');
                 
             $table->foreign('recipe_tag_id')
                     ->references('id')

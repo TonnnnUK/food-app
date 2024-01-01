@@ -21,24 +21,43 @@
         </div>
 
         <div class="flex items-center gap-2 mb-2" v-if="props.entry.entry_type == 'Meal'">
-            <label class="text-xs text-right w-28" for="">Filter</label>
-            <select class="text-xs border border-gray-400 rounded-lg" v-model="data.selectedFilter">
-                <option value="0">-- Filter --</option>
+            <label class="text-xs text-right w-28" for="">Filter by</label>
+            <select class="text-xs border border-gray-400 rounded-lg" v-model="data.selectedIngredientSlug" v-if="data.selectedTag == null">
+                <option value="null">-- Ingredient --</option>
                 <option v-for="filter, index in data.filters" :value="index" :key="filter">
                     {{ filter }}
                 </option>
             </select>
+        
+            
+            <select class="text-xs border border-gray-400 rounded-lg" v-model="data.selectedTag" v-if="data.selectedIngredientSlug == null">
+                <option value="null">-- Tag --</option>
+                <option v-for="tag, index in data.tags" :value="index" :key="tag">
+                    {{ tag.tag_name }}
+                </option>
+            </select>
+
+            <span class="text-xs text-red-800 cursor-pointer" 
+                v-on:click="data.selectedTag = null; data.selectedIngredientSlug = null"
+                v-if="data.selectedTag != null || data.selectedIngredientSlug != null"
+            >
+                    clear
+            </span>
         </div>
         
         <div class="flex items-center gap-2 mb-2" v-if="props.entry.entry_type == 'Meal'">
             <label class="text-xs text-right w-28" for="">Meal</label>
 
-            <select class="text-xs border border-gray-400 rounded-lg" v-model="entry.meal_id">
-                <option value="0">-- Select meal --</option>
-                <option v-for="meal in props.entry.options.meals" :value="meal.id" :key="meal.id">
+            <div class="flex flex-wrap gap-2 text-xs">
+                <span class="px-2 py-1 transition duration-150 bg-blue-300 border border-blue-400 rounded-lg cursor-pointer text-blue-950 hover:bg-blue-400"
+                        v-for="meal in props.entry.options.meals" 
+                        :value="meal.id" :key="meal.id"
+                        @click="entry.meal_id = meal.id"
+                        
+                >
                     {{ meal.name }}
-                </option>
-            </select>
+                </span>
+            </div>
         </div>
         
         <div class="flex items-center gap-2 mb-2" v-if="props.entry.entry_type == 'Recipe'">
@@ -100,10 +119,9 @@
     </div>
 </template>
 <script setup>
-    import { reactive, computed, watch } from "vue";
+    import { reactive, watch } from "vue";
     import { router } from '@inertiajs/vue3';
     import { CalendarService } from '../Services/CalendarService';
-    import TextInput from '@/Components/TextInput.vue';
 
     const props = defineProps({
         show: {
@@ -119,6 +137,9 @@
         },
         filters: {
             type: Object,
+        },
+        tags: {
+            type: Object,
         }
     });
 
@@ -126,7 +147,9 @@
 
     let data =  reactive({
         filters: props.filters,
-        selectedFilter: 0,
+        tags: props.tags,
+        selectedIngredientSlug: null,
+        selectedTag: null,
         entry_types: {
             'recipes': 'Recipe', 
             'meals': 'Meal', 
@@ -138,18 +161,21 @@
     });
 
     watch( data,  function(value){
+
         
-        console.log('filter changed', value.selectedFilter);
-        router.get('/planner', {
-                filterMealBy: value.selectedFilter 
-            }, 
-            {
-                preserveState: true,
-                preserveScroll: true,
-                onSuccess: ( page ) => {
-                    emit('filteredMeals', {data: page.props.meals})
-            }
-        });
+        if( data.selectedIngredientSlug != 0 ){
+            router.get('planner', {
+                    filterMealBy: value.selectedIngredientSlug 
+                }, 
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onSuccess: ( page ) => {
+                        emit('filteredMeals', {data: page.props.meals})
+                }
+            });
+        }
+                
 
     });
 
