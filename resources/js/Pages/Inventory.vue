@@ -74,7 +74,7 @@
                         x
                     </span>
                 </div>
-                <div class="relative flex flex-wrap mt-4 md:mt-2 gap-y-2 sm:gap-y-0 max-h-[120px] md:max-h-[200px] overflow-auto bg-white">
+                <div class="relative flex flex-wrap mt-4 md:mt-2 gap-y-2 sm:gap-y-0 max-h-[600px] lg:max-h-[200px] overflow-auto bg-white">
                     <div v-for="item of foodItems" :key="item.id" class="flex items-center w-full sm:w-1/2 lg:w-1/3">
                         <label class="flex items-center w-[95%] my-1 ml-1 text-lg capitalize">
                             <input class="hidden peer" type="checkbox" v-model="selectedItems" :id="item.id" :value="item.id"> 
