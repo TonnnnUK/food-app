@@ -342,7 +342,7 @@
                     :filters="props.filters" 
                     :tags="props.tags" 
                     @addedEntry="resetEntryForm()" 
-                    @filteredMealsByIngredient="updateMealsForModal(meals)"
+                    @filteredMeals="updateMealsForModal(meals)"
                 />
                 
             </Modal>

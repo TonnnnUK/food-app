@@ -22,7 +22,8 @@
 
         <div class="flex items-center gap-2 mb-2" v-if="props.entry.entry_type == 'Meal'">
             <label class="text-xs text-right w-28" for="">Filter by</label>
-            <select class="text-xs border border-gray-400 rounded-lg" v-model="data.selectedIngredientSlug" v-if="data.selectedTag == null">
+            <select class="text-xs border border-gray-400 rounded-lg" v-model="data.selectedIngredientSlug" 
+                v-if="data.selectedTag == null">
                 <option value="null">-- Ingredient --</option>
                 <option v-for="filter, index in data.filters" :value="index" :key="filter">
                     {{ filter }}
@@ -30,9 +31,10 @@
             </select>
         
             
-            <select class="text-xs border border-gray-400 rounded-lg" v-model="data.selectedTag" v-if="data.selectedIngredientSlug == null">
+            <select class="text-xs border border-gray-400 rounded-lg" v-model="data.selectedTag" 
+                v-if="data.selectedIngredientSlug == null">
                 <option value="null">-- Tag --</option>
-                <option v-for="tag, index in data.tags" :value="index" :key="tag">
+                <option v-for="tag, index in data.tags" :value="tag.id" :key="tag">
                     {{ tag.tag_name }}
                 </option>
             </select>
@@ -161,11 +163,28 @@
     });
 
     watch( data,  function(value){
-
         
-        if( data.selectedIngredientSlug != 0 ){
+        console.log('what is value?', value);
+
+        if( value.selectedIngredientSlug != null ){
+            console.log('selected ingredient slug', value.selectedIngredientSlug);
             router.get('planner', {
-                    filterMealBy: value.selectedIngredientSlug 
+                    filterByIngredient: value.selectedIngredientSlug 
+                }, 
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onSuccess: ( page ) => {
+                        
+                        emit('filteredMeals', {data: page.props.meals})
+                }
+            });
+        }
+        
+        if( value.selectedTag != null ){
+            console.log('selected tag', value.selectedTag);
+            router.get('planner', {
+                    filterByTag: value.selectedTag 
                 }, 
                 {
                     preserveState: true,
