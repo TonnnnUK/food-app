@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 class CustomWorkout extends Model
 {
+ 
+    protected $key = 'slug';
     
     protected $fillable = [
         'name', 
@@ -46,6 +49,24 @@ class CustomWorkout extends Model
         }
 
         return $slug;
+
+    }
+
+    public function getEquipmentNeeded(){
+
+        $exerciseIDs = $this->exerciseSets->pluck('exercise_id')->unique()->toArray();;
+        $exercises = Exercise::whereIn('id', $exerciseIDs)->get();
+        $equipment = collect([]);
+    
+        foreach($exercises as $exercise){
+            $equipment->push($exercise->equipment);
+        }
+
+        $unique = $equipment->unique();
+
+        dd($unique->all());
+
+        return $unique->all();
 
     }
 }

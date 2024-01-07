@@ -101,4 +101,5 @@ class User extends Authenticatable
 
         return $meals;
     }
+
 }

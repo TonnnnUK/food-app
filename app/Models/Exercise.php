@@ -22,7 +22,7 @@ class Exercise extends Model
 
     public function equipment()
     {
-        return $this->belongsToMany(Equipment::class)->withTimestamps();
+        return $this->belongsToMany(Equipment::class, 'exercises_equipment')->withTimestamps();
     }
 
     public function custom_workouts()

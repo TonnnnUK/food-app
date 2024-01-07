@@ -13,6 +13,7 @@ use App\Http\Controllers\WorkoutController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\CustomWorkoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +85,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/recipe/{recipe}', [RecipesController::class, 'addIngredient'])->name('add-recipe-ingredient');
     Route::post('/recipe/{recipe}/save', [RecipesController::class, 'update'])->name('update-recipe');
     Route::post('/recipe/{recipe}/remove/{fooditem}', [RecipesController::class, 'removeIngredient']) ->name('remove-recipe-ingredient');
+
+    Route::get('/u!/{user}/workouts', [CustomWorkoutController::class, 'index'])->name('user-workouts');
+    Route::get('/u!/{user}/workout/{workout:slug}', [CustomWorkoutController::class, 'view'])->name('view-workout');
 
 });
 
