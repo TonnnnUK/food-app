@@ -21,7 +21,7 @@
                         
                         <div class="mt-4">
                             <h2 class="text-xl font-bold">Equipment Needed</h2>
-                            <div v-for="item of equipment" :key="item.id">
+                            <div v-for="item of equipment" :key="item">
                                 {{ item.name }}
                             </div>
                         </div>
@@ -40,7 +40,7 @@
     
     defineProps({
         'workout': Object,
-        'equipment': Array,
+        'equipment': Object,
     });
 
 </script>

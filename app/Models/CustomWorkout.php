@@ -55,18 +55,26 @@ class CustomWorkout extends Model
     public function getEquipmentNeeded(){
 
         $exerciseIDs = $this->exerciseSets->pluck('exercise_id')->unique()->toArray();;
-        $exercises = Exercise::whereIn('id', $exerciseIDs)->get();
-        $equipment = collect([]);
-    
+        $exercises = Exercise::with(['equipment' => function ($query) {
+                                $query->select('equipment.name'); // Select only the columns you need from the equipment table
+                            }])->whereIn('id', $exerciseIDs)
+                            ->get();
+        $equipment = [];
+        $names = [];
+
         foreach($exercises as $exercise){
-            $equipment->push($exercise->equipment);
+           
+            foreach($exercise->equipment as $eq){
+                
+                if( !in_array( $eq->name, $names ) ){                    
+                    $names[] = $eq->name;
+                    $equipment[] = $eq;
+                }
+            }
+            
         }
 
-        $unique = $equipment->unique();
-
-        dd($unique->all());
-
-        return $unique->all();
+        return $equipment;
 
     }
 }
