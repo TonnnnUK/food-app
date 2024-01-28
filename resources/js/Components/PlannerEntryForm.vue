@@ -51,7 +51,8 @@
             <label class="text-xs text-right w-28" for="">Meal</label>
 
             <div class="flex flex-wrap gap-2 text-xs">
-                <span class="px-2 py-1 transition duration-150 bg-blue-300 border border-blue-400 rounded-lg cursor-pointer text-blue-950 hover:bg-blue-400"
+                <span class="px-2 py-1 transition duration-150 rounded-lg cursor-pointer"
+                        :class="entry.meal_id == meal.id ? 'bg-green-300 border-green-400' : 'bg-blue-300 border border-blue-400 text-blue-950 hover:bg-blue-400'"
                         v-for="meal in props.entry.options.meals" 
                         :value="meal.id" :key="meal.id"
                         @click="entry.meal_id = meal.id"

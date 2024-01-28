@@ -525,10 +525,8 @@
         };
         
         data.addingEntry = false;
-        router.get('/planner', {
-            preserveState: true,
-            preserveScroll: true
-        });
+
+        console.log('entry added', data)
     };
 
     
